@@ -1,6 +1,13 @@
-import { render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import RootLayout from "../layout";
 import { Metadata } from "next";
+import { renderWithRootLayout } from "./test-utils";
+
+jest.mock("next/font/google", () => ({
+  Inter: () => ({
+    className: "mock-inter-font",
+  }),
+}));
 
 describe("RootLayout", () => {
   const metadata: Metadata = {
@@ -8,19 +15,29 @@ describe("RootLayout", () => {
     description: "My portfolio site built with Next.js and Pages CMS",
   };
 
-  it("renders children correctly", () => {
-    const { container } = render(
+  it("renders navigation", () => {
+    renderWithRootLayout(
       <RootLayout>
         <div data-testid="child">Test Content</div>
       </RootLayout>,
     );
 
-    const childElement = container.querySelector('[data-testid="child"]');
-    expect(childElement).toBeInTheDocument();
+    expect(screen.getByRole("navigation")).toBeInTheDocument();
+  });
+
+  it("renders children correctly", () => {
+    renderWithRootLayout(
+      <RootLayout>
+        <div data-testid="child">Test Content</div>
+      </RootLayout>,
+    );
+
+    expect(screen.getByTestId("child")).toBeInTheDocument();
+    expect(screen.getByText("Test Content")).toBeInTheDocument();
   });
 
   it('has lang attribute set to "en"', () => {
-    const { container } = render(
+    const { container } = renderWithRootLayout(
       <RootLayout>
         <div>Test Content</div>
       </RootLayout>,
@@ -36,5 +53,15 @@ describe("RootLayout", () => {
     expect(metadata.description).toBe(
       "My portfolio site built with Next.js and Pages CMS",
     );
+  });
+
+  it("applies Inter font class", () => {
+    const { container } = renderWithRootLayout(
+      <RootLayout>
+        <div>Test Content</div>
+      </RootLayout>,
+    );
+
+    expect(container.querySelector(".mock-inter-font")).toBeInTheDocument();
   });
 });

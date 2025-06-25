@@ -6,7 +6,7 @@ interface Project {
   description: string;
   technologies: string[];
   url: string;
-  image: string;
+  image?: string;
   featured: boolean;
   date?: string;
   content?: string;
@@ -27,10 +27,8 @@ export default function ProjectCard({ project }: { project: Project }) {
       {project.image && (
         <ProjectImage src={project.image} alt={project.title} />
       )}
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          {project.title}
-        </h3>
+      <div className={`p-6 ${!project.image ? "pt-4" : ""}`}>
+        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
         <p className="text-gray-600 mb-4">{project.description}</p>
 
         {project.technologies.length > 0 && (
@@ -62,7 +60,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           href={project.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center text-blue-600 hover:text-blue-800"
+          className="text-blue-600 hover:text-blue-800"
         >
           View Project →
         </Link>

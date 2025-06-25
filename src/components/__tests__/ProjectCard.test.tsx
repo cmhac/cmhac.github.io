@@ -79,4 +79,19 @@ describe("ProjectCard", () => {
       screen.queryByText(/\d{1,2}[/.]\d{1,2}[/.]\d{2,4}/),
     ).not.toBeInTheDocument();
   });
+
+  it("does not render image section when image is not provided", () => {
+    const projectWithoutImage = { ...mockProject, image: undefined };
+    render(<ProjectCard project={projectWithoutImage} />);
+
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  it("adjusts padding when no image is present", () => {
+    const projectWithoutImage = { ...mockProject, image: undefined };
+    const { container } = render(<ProjectCard project={projectWithoutImage} />);
+
+    const contentDiv = container.querySelector(".p-6");
+    expect(contentDiv).toHaveClass("pt-4");
+  });
 });

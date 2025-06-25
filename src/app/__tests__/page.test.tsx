@@ -1,13 +1,30 @@
 import { render, screen } from "@testing-library/react";
 import Home from "../page";
-import { mockProjects } from "./test-utils";
 
-// Mock the projects utility
+// Mock the getAllProjects function
 jest.mock("@/utils/projects", () => ({
-  getHomePageProjects: jest.fn().mockImplementation(async () => ({
-    featured: mockProjects.filter((p) => p.featured),
-    recent: mockProjects.slice(0, 3),
-  })),
+  getAllProjects: jest.fn().mockResolvedValue([
+    {
+      title: "Featured Project",
+      description: "A featured project description",
+      technologies: ["React", "TypeScript"],
+      url: "https://example.com",
+      image: "/media/test.png",
+      featured: true,
+      date: "2024-03-14",
+      content: "This is the project content.",
+    },
+    {
+      title: "Regular Project",
+      description: "A regular project description",
+      technologies: ["React", "TypeScript"],
+      url: "https://example.com",
+      image: "/media/test.png",
+      featured: false,
+      date: "2024-03-14",
+      content: "This is the project content.",
+    },
+  ]),
 }));
 
 // Mock fs for site settings
@@ -26,28 +43,14 @@ describe("Home Page", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders social links", async () => {
-    render(await Home());
-    expect(screen.getByText("Github")).toBeInTheDocument();
-    expect(screen.getByText("Linkedin")).toBeInTheDocument();
-    expect(screen.getByText("Twitter")).toBeInTheDocument();
-  });
-
   it("renders featured projects section", async () => {
     render(await Home());
     expect(screen.getByText("Featured Projects")).toBeInTheDocument();
-
-    // All mock projects are featured
-    const titles = screen.getAllByRole("heading", { level: 3 });
-    expect(titles.length).toBeGreaterThanOrEqual(3);
-    expect(titles[0]).toHaveTextContent("Test Project");
-    expect(titles[1]).toHaveTextContent("Second Project");
-    expect(titles[2]).toHaveTextContent("Third Project");
+    expect(screen.getByText("Featured Project")).toBeInTheDocument();
   });
 
-  it("renders recent projects section", async () => {
+  it("renders view all projects link", async () => {
     render(await Home());
-    expect(screen.getByText("Recent Projects")).toBeInTheDocument();
     expect(screen.getByText("View All Projects →")).toHaveAttribute(
       "href",
       "/projects",

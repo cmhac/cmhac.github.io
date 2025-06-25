@@ -2,8 +2,9 @@ import { promises as fs } from "fs";
 import path from "path";
 import Image from "next/image";
 import Link from "next/link";
-import { getHomePageProjects } from "@/utils/projects";
+import { getAllProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
+import ProjectImage from "@/components/ProjectImage";
 
 // Types for our CMS content
 interface SiteSettings {
@@ -46,6 +47,7 @@ function ProjectCard({ project }: { project: Project }) {
             src={project.image}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover rounded"
           />
         </div>
@@ -77,65 +79,67 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default async function Home() {
-  const siteSettings = await getSiteSettings();
-  const { featured, recent } = await getHomePageProjects();
+  const projects = await getAllProjects();
+  const featuredProjects = projects.filter((project) => project.featured);
 
   return (
-    <main className="min-h-screen p-8 md:p-16 bg-white">
-      {/* Hero Section */}
-      <section className="max-w-4xl mx-auto mb-16 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          {siteSettings.title}
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">{siteSettings.description}</p>
-        <div className="flex justify-center gap-4">
-          {Object.entries(siteSettings.socialLinks).map(([platform, url]) => (
-            <a
-              key={platform}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 hover:text-gray-900"
-            >
-              {platform.charAt(0).toUpperCase() + platform.slice(1)}
-            </a>
-          ))}
-        </div>
+    <main className="container mx-auto px-4 py-8">
+      <section className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">My Portfolio</h1>
+        <p className="text-xl text-gray-600">
+          Welcome to my portfolio website showcasing my projects and skills
+        </p>
       </section>
 
-      {/* Featured Projects Section */}
-      {featured.length > 0 && (
-        <section className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">
-            Featured Projects
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {featured.map((project) => (
-              <ProjectCard key={project.title} project={project} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Recent Projects Section */}
-      {recent.length > 0 && (
-        <section className="max-w-4xl mx-auto mb-16">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Recent Projects</h2>
-            <Link
-              href="/projects"
-              className="text-blue-600 hover:text-blue-800"
+      <section className="mb-12">
+        <h2 className="text-2xl font-semibold mb-6">Featured Projects</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredProjects.map((project) => (
+            <div
+              key={project.title}
+              className="bg-white rounded-lg shadow-md overflow-hidden"
             >
-              View All Projects →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {recent.map((project) => (
-              <ProjectCard key={project.title} project={project} />
-            ))}
-          </div>
-        </section>
-      )}
+              {project.image && (
+                <ProjectImage
+                  src={project.image}
+                  alt={project.title}
+                  className="rounded"
+                />
+              )}
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                <p className="text-gray-600 mb-4">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  View Project →
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-8">
+          <Link
+            href="/projects"
+            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            View All Projects →
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import ProjectImage from "./ProjectImage";
 
 interface Project {
   title: string;
@@ -25,14 +25,7 @@ export default function ProjectCard({ project }: { project: Project }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {project.image && (
-        <div className="relative h-48">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            className="object-cover"
-          />
-        </div>
+        <ProjectImage src={project.image} alt={project.title} />
       )}
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">

@@ -22,6 +22,7 @@ interface Project {
   url: string;
   image: string;
   featured: boolean;
+  date?: string; // Add date for sorting
 }
 
 async function getSiteSettings(): Promise<SiteSettings> {
@@ -44,7 +45,10 @@ async function getSiteSettings(): Promise<SiteSettings> {
   }
 }
 
-async function getFeaturedProjects(): Promise<Project[]> {
+async function getProjects(): Promise<{
+  featured: Project[];
+  recent: Project[];
+}> {
   const projectsDir = path.join(process.cwd(), "src/content/projects");
   try {
     const files = await fs.readdir(projectsDir);
@@ -56,15 +60,68 @@ async function getFeaturedProjects(): Promise<Project[]> {
         return project;
       })
     );
-    return projects.filter((project) => project.featured);
+
+    // Sort projects by date (newest first)
+    const sortedProjects = projects.sort((a, b) => {
+      return (
+        new Date(b.date || "").getTime() - new Date(a.date || "").getTime()
+      );
+    });
+
+    return {
+      featured: sortedProjects.filter((project) => project.featured),
+      recent: sortedProjects.slice(0, 3), // Get 3 most recent projects
+    };
   } catch (error) {
-    return [];
+    return {
+      featured: [],
+      recent: [],
+    };
   }
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+      {project.image && (
+        <div className="relative w-full h-48 mb-4">
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            className="object-cover rounded"
+          />
+        </div>
+      )}
+      <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+      <p className="text-gray-600 mb-4">{project.description}</p>
+      {project.technologies && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.technologies.map((tech) => (
+            <span
+              key={tech}
+              className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      )}
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-800"
+      >
+        View Project →
+      </a>
+    </div>
+  );
 }
 
 export default async function Home() {
   const siteSettings = await getSiteSettings();
-  const featuredProjects = await getFeaturedProjects();
+  const { featured, recent } = await getProjects();
 
   return (
     <main className="min-h-screen p-8 md:p-16 bg-white">
@@ -90,50 +147,34 @@ export default async function Home() {
       </section>
 
       {/* Featured Projects Section */}
-      {featuredProjects.length > 0 && (
-        <section className="max-w-4xl mx-auto">
+      {featured.length > 0 && (
+        <section className="max-w-4xl mx-auto mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">
             Featured Projects
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {featuredProjects.map((project) => (
-              <div
-                key={project.title}
-                className="border rounded-lg p-6 hover:shadow-lg transition-shadow"
-              >
-                {project.image && (
-                  <div className="relative w-full h-48 mb-4">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover rounded"
-                    />
-                  </div>
-                )}
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-gray-600 mb-4">{project.description}</p>
-                {project.technologies && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="bg-gray-100 px-3 py-1 rounded-full text-sm"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  View Project →
-                </a>
-              </div>
+            {featured.map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Recent Projects Section */}
+      {recent.length > 0 && (
+        <section className="max-w-4xl mx-auto mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Recent Projects</h2>
+            <Link
+              href="/projects"
+              className="text-blue-600 hover:text-blue-800"
+            >
+              View All Projects →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {recent.map((project) => (
+              <ProjectCard key={project.title} project={project} />
             ))}
           </div>
         </section>

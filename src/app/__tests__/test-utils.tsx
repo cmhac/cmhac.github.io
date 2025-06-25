@@ -51,8 +51,31 @@ jest.mock("next/navigation", () => ({
 // Mock next/image
 jest.mock("next/image", () => ({
   __esModule: true,
-  default: ({ src, alt, className }: any) => (
-    <img src={src} alt={alt} className={className} />
+  default: ({
+    src,
+    alt,
+    className,
+    width = 100,
+    height = 100,
+    priority,
+    ...props
+  }: {
+    src: string;
+    alt: string;
+    className?: string;
+    width?: number;
+    height?: number;
+    priority?: boolean;
+    [key: string]: any;
+  }) => (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      width={width}
+      height={height}
+      {...props}
+    />
   ),
 }));
 

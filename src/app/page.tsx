@@ -26,11 +26,11 @@ async function getSiteSettings(): Promise<SiteSettings> {
   } catch (error) {
     // Return default settings if file doesn't exist yet
     return {
-      title: "My Portfolio",
-      description: "Welcome to my portfolio",
-      author: "Your Name",
+      title: "Chris Hacker",
+      description: "Investigative Data Journalist & Engineer",
+      author: "Chris Hacker",
       socialLinks: {
-        github: "#",
+        github: "https://github.com/cmhac",
         linkedin: "#",
         twitter: "#",
       },
@@ -40,26 +40,30 @@ async function getSiteSettings(): Promise<SiteSettings> {
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+    <div className="bg-terminal-selection/30 backdrop-blur-sm rounded-lg p-6 card-hover border border-terminal-selection/50">
       {project.image && (
-        <div className="relative w-full h-48 mb-4">
+        <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg">
           <Image
             src={project.image}
             alt={project.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover rounded"
+            className="object-cover transition-transform duration-500 hover:scale-110"
           />
         </div>
       )}
-      <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-      <p className="text-gray-600 mb-4">{project.description}</p>
+      <h3 className="text-xl font-mono font-bold mb-2 text-terminal-purple">
+        {project.title}
+      </h3>
+      <p className="text-terminal-text/80 mb-4 font-light">
+        {project.description}
+      </p>
       {project.technologies && (
         <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+              className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono"
             >
               {tech}
             </span>
@@ -70,9 +74,9 @@ function ProjectCard({ project }: { project: Project }) {
         href={project.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-600 hover:text-blue-800"
+        className="inline-flex items-center text-terminal-green hover:text-terminal-cyan transition-colors font-mono"
       >
-        View Project →
+        $ explore_project<span className="terminal-text ml-1"></span>
       </Link>
     </div>
   );
@@ -81,65 +85,61 @@ function ProjectCard({ project }: { project: Project }) {
 export default async function Home() {
   const projects = await getAllProjects();
   const featuredProjects = projects.filter((project) => project.featured);
+  const siteSettings = await getSiteSettings();
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <section className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">My Portfolio</h1>
-        <p className="text-xl text-gray-600">
-          Welcome to my portfolio website showcasing my projects and skills
-        </p>
-      </section>
-
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-6">Featured Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProjects.map((project) => (
-            <div
-              key={project.title}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
+    <div className="min-h-screen pt-16">
+      <main className="container mx-auto px-4 py-16">
+        <section className="text-center mb-16 animate-text-reveal">
+          <h1 className="text-5xl font-bold mb-6 font-mono">
+            <span className="text-terminal-purple">{siteSettings.author}</span>
+            <span className="text-terminal-text"> | </span>
+            <span className="text-terminal-cyan">
+              {siteSettings.description}
+            </span>
+          </h1>
+          <p className="text-xl text-terminal-text/80 max-w-3xl mx-auto leading-relaxed">
+            I build tools and analyze data to uncover stories that matter.
+            Specializing in investigative data journalism and custom software
+            development for complex reporting challenges.
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Link
+              href="/projects"
+              className="px-6 py-3 bg-terminal-purple/20 text-terminal-purple border border-terminal-purple rounded-lg hover:bg-terminal-purple hover:text-terminal-text transition-all duration-300 font-mono"
             >
-              {project.image && (
-                <ProjectImage
-                  src={project.image}
-                  alt={project.title}
-                  className="rounded"
-                />
-              )}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                <p className="text-gray-600 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  View Project →
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="text-center mt-8">
-          <Link
-            href="/projects"
-            className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            View All Projects →
-          </Link>
-        </div>
-      </section>
-    </main>
+              View Projects
+            </Link>
+            <Link
+              href="/about"
+              className="px-6 py-3 bg-terminal-cyan/20 text-terminal-cyan border border-terminal-cyan rounded-lg hover:bg-terminal-cyan hover:text-terminal transition-all duration-300 font-mono"
+            >
+              About Me
+            </Link>
+          </div>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-2xl font-mono font-bold mb-8 flex items-center">
+            <span className="text-terminal-green">$</span>
+            <span className="text-terminal-purple ml-2">featured_projects</span>
+            <span className="text-terminal-text terminal-text ml-2"></span>
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <Link
+              href="/projects"
+              className="inline-flex items-center px-6 py-3 bg-terminal-selection/30 text-terminal-text border border-terminal-selection rounded-lg hover:bg-terminal-selection transition-all duration-300 font-mono"
+            >
+              $ explore_all_projects<span className="terminal-text ml-1"></span>
+            </Link>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }

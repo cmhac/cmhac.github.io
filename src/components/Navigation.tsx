@@ -11,55 +11,50 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-terminal/50 backdrop-blur-sm fixed w-full z-50 border-b border-terminal-selection">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex items-center">
             {/* Logo/Home link */}
-            <div className="flex-shrink-0 flex items-center">
-              <Link
-                href="/"
-                className={`text-lg font-semibold ${
-                  isActive("/")
-                    ? "text-blue-600"
-                    : "text-gray-900 hover:text-blue-600"
-                }`}
-              >
-                Portfolio
-              </Link>
-            </div>
+            <Link
+              href="/"
+              className="text-xl font-mono font-bold text-terminal-purple hover:text-terminal-cyan transition-colors"
+            >
+              chris_hacker<span className="text-terminal-text">/</span>
+              <span className="text-terminal-green">data</span>
+            </Link>
 
             {/* Navigation Links */}
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
               <Link
                 href="/"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
                   isActive("/")
-                    ? "border-blue-500 text-gray-900"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "text-terminal-cyan"
+                    : "text-terminal-text hover:text-terminal-purple"
                 }`}
               >
-                Home
+                ~/home
               </Link>
               <Link
                 href="/projects"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
                   isActive("/projects")
-                    ? "border-blue-500 text-gray-900"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "text-terminal-cyan"
+                    : "text-terminal-text hover:text-terminal-purple"
                 }`}
               >
-                Projects
+                ~/projects
               </Link>
               <Link
                 href="/about"
-                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
                   isActive("/about")
-                    ? "border-blue-500 text-gray-900"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "text-terminal-cyan"
+                    : "text-terminal-text hover:text-terminal-purple"
                 }`}
               >
-                About
+                ~/about
               </Link>
             </div>
           </div>
@@ -68,12 +63,11 @@ export default function Navigation() {
           <div className="sm:hidden flex items-center">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-terminal-text hover:text-terminal-purple focus:outline-none focus:ring-2 focus:ring-terminal-purple"
               aria-controls="mobile-menu"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
-              {/* Menu icon */}
               <svg
                 className="block h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,36 +90,36 @@ export default function Navigation() {
 
       {/* Mobile menu */}
       <div className="sm:hidden" id="mobile-menu">
-        <div className="pt-2 pb-3 space-y-1">
+        <div className="pt-2 pb-3 space-y-1 bg-terminal-selection/50 backdrop-blur-sm">
           <Link
             href="/"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+            className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/")
-                ? "bg-blue-50 border-blue-500 text-blue-700"
-                : "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"
+                : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            Home
+            ~/home
           </Link>
           <Link
             href="/projects"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+            className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/projects")
-                ? "bg-blue-50 border-blue-500 text-blue-700"
-                : "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"
+                : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            Projects
+            ~/projects
           </Link>
           <Link
             href="/about"
-            className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+            className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/about")
-                ? "bg-blue-50 border-blue-500 text-blue-700"
-                : "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"
+                : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            About
+            ~/about
           </Link>
         </div>
       </div>

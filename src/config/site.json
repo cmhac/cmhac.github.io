@@ -1,10 +1,10 @@
 {
-  "title": "My Portfolio",
-  "description": "Welcome to my portfolio website showcasing my projects and skills",
-  "author": "Your Name",
+  "title": "Chris Hacker",
+  "description": "Investigative Data Journalist & Engineer",
+  "author": "Chris Hacker",
   "socialLinks": {
-    "github": "https://github.com/yourusername",
-    "linkedin": "https://linkedin.com/in/yourusername",
-    "twitter": "https://twitter.com/yourusername"
+    "github": "https://github.com/cmhac",
+    "linkedin": "#",
+    "twitter": "#"
   }
 }

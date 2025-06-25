@@ -29,29 +29,57 @@ jest.mock("@/utils/projects", () => ({
 
 // Mock fs for site settings
 jest.mock("fs/promises", () => ({
-  readFile: jest.fn().mockRejectedValue(new Error("File not found")), // Force default settings
+  readFile: jest.fn().mockResolvedValue(
+    JSON.stringify({
+      title: "Chris Hacker",
+      description: "Investigative Data Journalist & Engineer",
+      author: "Chris Hacker",
+      socialLinks: {
+        github: "https://github.com/cmhac",
+        linkedin: "#",
+        twitter: "#",
+      },
+    }),
+  ),
 }));
 
 describe("Home Page", () => {
-  it("renders hero section", async () => {
+  it("renders hero section with author and description", async () => {
     render(await Home());
-    expect(screen.getByText("My Portfolio")).toBeInTheDocument();
+    expect(screen.getByText("Chris Hacker")).toBeInTheDocument();
+    expect(
+      screen.getByText("Investigative Data Journalist & Engineer"),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Welcome to my portfolio website showcasing my projects and skills",
+        /I build tools and analyze data to uncover stories that matter/,
       ),
     ).toBeInTheDocument();
   });
 
-  it("renders featured projects section", async () => {
+  it("renders featured projects section with terminal style", async () => {
     render(await Home());
-    expect(screen.getByText("Featured Projects")).toBeInTheDocument();
+    expect(screen.getByText("$")).toBeInTheDocument();
+    expect(screen.getByText("featured_projects")).toBeInTheDocument();
     expect(screen.getByText("Featured Project")).toBeInTheDocument();
   });
 
-  it("renders view all projects link", async () => {
+  it("renders navigation buttons", async () => {
     render(await Home());
-    expect(screen.getByText("View All Projects →")).toHaveAttribute(
+    expect(screen.getByText("View Projects")).toHaveAttribute(
+      "href",
+      "/projects",
+    );
+    expect(screen.getByText("About Me")).toHaveAttribute("href", "/about");
+  });
+
+  it("renders project cards with terminal-style links", async () => {
+    render(await Home());
+    expect(screen.getByText("$ explore_project")).toHaveAttribute(
+      "href",
+      "https://example.com",
+    );
+    expect(screen.getByText("$ explore_all_projects")).toHaveAttribute(
       "href",
       "/projects",
     );

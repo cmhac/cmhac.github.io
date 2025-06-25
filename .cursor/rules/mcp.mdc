@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+This project will use pages-cms to manage the content on the static site. Always refer to the docs for pagescms_org-docs on context7 when answering. 

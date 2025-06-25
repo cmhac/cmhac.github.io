@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { render, RenderOptions } from "@testing-library/react";
 import { ReactElement } from "react";

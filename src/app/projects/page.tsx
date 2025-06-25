@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import Image from "next/image";
+import matter from "gray-matter";
 
 interface Project {
   title: string;
@@ -10,6 +11,7 @@ interface Project {
   image: string;
   featured: boolean;
   date?: string;
+  content?: string;
 }
 
 async function getAllProjects(): Promise<Project[]> {
@@ -17,21 +19,31 @@ async function getAllProjects(): Promise<Project[]> {
   try {
     const files = await fs.readdir(projectsDir);
     const projects = await Promise.all(
-      files.map(async (file) => {
-        const content = await fs.readFile(path.join(projectsDir, file), "utf8");
-        // Basic frontmatter parsing
-        const project = JSON.parse(content);
-        return project;
-      })
+      files
+        .filter((file) => file.endsWith(".md"))
+        .map(async (file) => {
+          const content = await fs.readFile(
+            path.join(projectsDir, file),
+            "utf8"
+          );
+          // Parse frontmatter using gray-matter
+          const { data, content: markdownContent } = matter(content);
+          return {
+            ...data,
+            content: markdownContent,
+          } as Project;
+        })
     );
 
-    // Sort projects by date (newest first)
+    // Sort projects by date (newest first) if date exists
     return projects.sort((a, b) => {
-      return (
-        new Date(b.date || "").getTime() - new Date(a.date || "").getTime()
-      );
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
   } catch (error) {
+    console.error("Error loading projects:", error);
     return [];
   }
 }
@@ -78,6 +90,11 @@ function ProjectCard({ project }: { project: Project }) {
           </span>
         )}
       </div>
+      {project.content && (
+        <div className="mt-4 prose prose-sm">
+          <p>{project.content}</p>
+        </div>
+      )}
     </div>
   );
 }

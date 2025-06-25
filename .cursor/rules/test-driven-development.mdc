@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Rule Name: Test-Driven Development (TDD)
+Description: 
+
+This project follows strict test-driven development practices using Jest and React Testing Library. When making changes to the codebase:
+
+1. ALWAYS write or modify tests BEFORE changing implementation code:
+   - Place tests in `__tests__` directories adjacent to the source files
+   - Follow the naming convention: `{component}.test.tsx` for components
+   - Use the existing test utils from `src/app/__tests__/test-utils.tsx`
+
+2. Test Structure Requirements:
+   - Import testing utilities from '@testing-library/react'
+   - Use describe blocks to group related tests
+   - Write clear test descriptions that specify expected behavior
+   - Follow the Arrange-Act-Assert pattern in test cases
+
+3. Coverage Expectations:
+   - All new components must have corresponding test files
+   - Test both success and error states
+   - Ensure interactive elements (buttons, forms) have user event tests
+   - Maintain existing test coverage (run `npm run test:coverage` to verify)
+
+4. Development Flow:
+   - Write failing test(s) first
+   - Implement minimum code to make tests pass
+   - Refactor while keeping tests green
+   - Commit only when all tests pass (`npm run test`)
+
+Example test structure:
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Component from './Component'
+
+describe('Component', () => {
+  it('should render expected content', () => {
+    render(<Component />)
+    expect(screen.getByRole('heading')).toBeInTheDocument()
+  })
+})
+``` 

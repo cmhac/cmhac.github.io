@@ -1,7 +1,9 @@
 import { promises as fs } from "fs";
 import path from "path";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { getHomePageProjects } from "@/utils/projects";
+import type { Project } from "@/utils/projects";
 
 // Types for our CMS content
 interface SiteSettings {
@@ -13,16 +15,6 @@ interface SiteSettings {
     linkedin: string;
     twitter: string;
   };
-}
-
-interface Project {
-  title: string;
-  description: string;
-  technologies: string[];
-  url: string;
-  image: string;
-  featured: boolean;
-  date?: string; // Add date for sorting
 }
 
 async function getSiteSettings(): Promise<SiteSettings> {
@@ -41,41 +33,6 @@ async function getSiteSettings(): Promise<SiteSettings> {
         linkedin: "#",
         twitter: "#",
       },
-    };
-  }
-}
-
-async function getProjects(): Promise<{
-  featured: Project[];
-  recent: Project[];
-}> {
-  const projectsDir = path.join(process.cwd(), "src/content/projects");
-  try {
-    const files = await fs.readdir(projectsDir);
-    const projects = await Promise.all(
-      files.map(async (file) => {
-        const content = await fs.readFile(path.join(projectsDir, file), "utf8");
-        // Basic frontmatter parsing
-        const project = JSON.parse(content);
-        return project;
-      })
-    );
-
-    // Sort projects by date (newest first)
-    const sortedProjects = projects.sort((a, b) => {
-      return (
-        new Date(b.date || "").getTime() - new Date(a.date || "").getTime()
-      );
-    });
-
-    return {
-      featured: sortedProjects.filter((project) => project.featured),
-      recent: sortedProjects.slice(0, 3), // Get 3 most recent projects
-    };
-  } catch (error) {
-    return {
-      featured: [],
-      recent: [],
     };
   }
 }
@@ -107,21 +64,21 @@ function ProjectCard({ project }: { project: Project }) {
           ))}
         </div>
       )}
-      <a
+      <Link
         href={project.url}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-600 hover:text-blue-800"
       >
         View Project →
-      </a>
+      </Link>
     </div>
   );
 }
 
 export default async function Home() {
   const siteSettings = await getSiteSettings();
-  const { featured, recent } = await getProjects();
+  const { featured, recent } = await getHomePageProjects();
 
   return (
     <main className="min-h-screen p-8 md:p-16 bg-white">

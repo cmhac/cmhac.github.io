@@ -123,9 +123,11 @@ describe("ProjectsPage", () => {
     });
   });
 
-  it("renders the page title", async () => {
+  it("renders the page title with terminal style", async () => {
     render(await ProjectsPage());
-    expect(screen.getByText("All Projects")).toBeInTheDocument();
+    expect(screen.getByText("$")).toBeInTheDocument();
+    expect(screen.getByText("ls")).toBeInTheDocument();
+    expect(screen.getByText("~/projects")).toBeInTheDocument();
   });
 
   it("renders project cards for each project", async () => {
@@ -151,8 +153,8 @@ describe("ProjectsPage", () => {
     expect(reactTags.length).toBeGreaterThan(0);
     expect(typescriptTags.length).toBeGreaterThan(0);
 
-    // Check if "View Project" links are present
-    const links = screen.getAllByText("View Project →");
+    // Check if terminal-style project links are present
+    const links = screen.getAllByText("$ explore_project");
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute("href", "https://example.com");
   });

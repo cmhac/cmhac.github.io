@@ -6,8 +6,13 @@ describe("ProjectCard", () => {
   it("renders project title and description", () => {
     render(<ProjectCard project={mockProject} />);
 
-    expect(screen.getByText(mockProject.title)).toBeInTheDocument();
-    expect(screen.getByText(mockProject.description)).toBeInTheDocument();
+    const title = screen.getByText(mockProject.title);
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveClass("text-terminal-purple");
+
+    const description = screen.getByText(mockProject.description);
+    expect(description).toBeInTheDocument();
+    expect(description).toHaveClass("text-terminal-text/80");
   });
 
   it("renders project image when provided", () => {
@@ -17,34 +22,46 @@ describe("ProjectCard", () => {
     expect(image).toHaveAttribute("alt", mockProject.title);
     expect(image).toHaveAttribute(
       "class",
-      expect.stringContaining("object-cover"),
+      expect.stringContaining(
+        "transition-transform duration-500 hover:scale-110",
+      ),
     );
   });
 
-  it("renders technologies as tags", () => {
+  it("renders technologies as terminal-style tags", () => {
     render(<ProjectCard project={mockProject} />);
 
     mockProject.technologies.forEach((tech) => {
-      expect(screen.getByText(tech)).toBeInTheDocument();
+      const tag = screen.getByText(tech);
+      expect(tag).toBeInTheDocument();
+      expect(tag).toHaveClass(
+        "bg-terminal-selection/50",
+        "text-terminal-cyan",
+        "font-mono",
+      );
     });
   });
 
-  it("renders project URL as a link", () => {
+  it("renders terminal-style project link", () => {
     render(<ProjectCard project={mockProject} />);
 
-    const link = screen.getByText("View Project →");
+    const link = screen.getByText("$ explore_project");
     expect(link).toHaveAttribute("href", mockProject.url);
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link).toHaveClass("text-terminal-green", "font-mono");
   });
 
-  it("renders project content when provided", () => {
+  it("renders project content with terminal styling", () => {
     render(<ProjectCard project={mockProject} />);
 
-    expect(screen.getByText(mockProject.content!)).toBeInTheDocument();
+    const content = screen.getByText(mockProject.content!);
+    expect(content).toBeInTheDocument();
+    const contentWrapper = content.closest(".prose");
+    expect(contentWrapper).toHaveClass("prose-invert", "text-terminal-text/90");
   });
 
-  it("renders date when provided", () => {
+  it("renders date with terminal styling", () => {
     const projectWithDate = {
       ...mockProject,
       date: "2024-03-14",
@@ -52,12 +69,12 @@ describe("ProjectCard", () => {
 
     render(<ProjectCard project={projectWithDate} />);
 
-    // Use a more flexible date check that works across locales
     const dateElement = screen.getByText((content) => {
       const dateRegex = /\d{1,2}[/.]\d{1,2}[/.]\d{2,4}/;
       return dateRegex.test(content);
     });
     expect(dateElement).toBeInTheDocument();
+    expect(dateElement).toHaveClass("text-terminal-comment", "font-mono");
   });
 
   it("handles missing optional fields gracefully", () => {
@@ -85,13 +102,5 @@ describe("ProjectCard", () => {
     render(<ProjectCard project={projectWithoutImage} />);
 
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
-  });
-
-  it("adjusts padding when no image is present", () => {
-    const projectWithoutImage = { ...mockProject, image: undefined };
-    const { container } = render(<ProjectCard project={projectWithoutImage} />);
-
-    const contentDiv = container.querySelector(".p-6");
-    expect(contentDiv).toHaveClass("pt-4");
   });
 });

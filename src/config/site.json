@@ -1,0 +1,10 @@
+{
+  "title": "My Portfolio",
+  "description": "Welcome to my portfolio website showcasing my projects and skills",
+  "author": "Your Name",
+  "socialLinks": {
+    "github": "https://github.com/yourusername",
+    "linkedin": "https://linkedin.com/in/yourusername",
+    "twitter": "https://twitter.com/yourusername"
+  }
+}

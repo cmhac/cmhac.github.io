@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@fontsource/fira-code";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navigation from "@/components/Navigation";
@@ -6,8 +7,9 @@ import Navigation from "@/components/Navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "My personal portfolio website",
+  title: "Chris Hacker | Data Journalist & Engineer",
+  description:
+    "Investigative data reporter and engineer specializing in data analysis and custom tools for complex reporting challenges.",
 };
 
 export default function RootLayout({
@@ -17,9 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} grid-bg min-h-screen`}>
         <Navigation />
-        <main className="min-h-screen bg-gray-50">{children}</main>
+        <main className="container mx-auto px-4 py-8 relative z-10 animate-text-reveal">
+          {children}
+        </main>
       </body>
     </html>
   );

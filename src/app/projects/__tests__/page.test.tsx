@@ -53,7 +53,7 @@ describe("Projects Page", () => {
     });
   });
 
-  it("renders project cards with correct layout", async () => {
+  it("renders project cards with correct layout and interaction states", async () => {
     render(await ProjectsPage());
 
     // Check if project cards have the correct layout classes
@@ -67,6 +67,10 @@ describe("Projects Page", () => {
         "backdrop-blur-sm",
         "rounded-lg",
         "p-6",
+        "transition-all",
+        "duration-300",
+        "hover:bg-terminal-selection/50",
+        "hover:border-terminal-purple/50",
       );
     });
 
@@ -75,13 +79,20 @@ describe("Projects Page", () => {
     expect(cardContainer).toHaveClass("flex", "flex-col", "space-y-8");
   });
 
-  it("renders project links with terminal styling", async () => {
+  it("renders clickable project cards with correct links", async () => {
     render(await ProjectsPage());
 
-    // Check if terminal-style project links are present
-    const links = screen.getAllByText("➜ explore project");
-    expect(links).toHaveLength(3);
-    expect(links[0]).toHaveAttribute("href", "/projects/project-1");
+    // Check if project cards are wrapped in links
+    const projectLinks = screen.getAllByRole("link");
+    expect(projectLinks).toHaveLength(mockProjects.length);
+
+    projectLinks.forEach((link, index) => {
+      expect(link).toHaveAttribute(
+        "href",
+        `/projects/${mockProjects[index].slug}`,
+      );
+      expect(link).toHaveClass("block");
+    });
   });
 
   it("renders project dates with terminal styling", async () => {

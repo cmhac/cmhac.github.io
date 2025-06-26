@@ -64,26 +64,6 @@ describe("ProjectCard", () => {
     });
   });
 
-  it("renders project links with terminal styling", () => {
-    render(<ProjectCard project={projectWithSlug} />);
-
-    const exploreLink = screen.getByText("➜ explore project");
-    expect(exploreLink).toHaveAttribute(
-      "href",
-      `/projects/${projectWithSlug.slug}`,
-    );
-    expect(exploreLink).toHaveClass("text-terminal-green", "font-mono");
-  });
-
-  it("renders project content with terminal styling", () => {
-    render(<ProjectCard project={projectWithSlug} />);
-
-    const content = screen.getByText(projectWithSlug.content!);
-    expect(content).toBeInTheDocument();
-    const contentWrapper = content.closest(".prose");
-    expect(contentWrapper).toHaveClass("prose-invert", "text-terminal-text/90");
-  });
-
   it("renders date with terminal styling", () => {
     const projectWithDate = {
       ...projectWithSlug,
@@ -121,7 +101,7 @@ describe("ProjectCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("has correct layout structure", () => {
+  it("has correct layout structure and hover states", () => {
     render(<ProjectCard project={projectWithSlug} />);
 
     // Check main container
@@ -134,6 +114,10 @@ describe("ProjectCard", () => {
       "rounded-lg",
       "p-6",
       "card-hover",
+      "transition-all",
+      "duration-300",
+      "hover:bg-terminal-selection/50",
+      "hover:border-terminal-purple/50",
     );
 
     // Check flex container
@@ -149,21 +133,14 @@ describe("ProjectCard", () => {
     expect(contentContainer).toHaveClass("flex-1");
   });
 
-  it("makes title and image clickable with correct project link", () => {
+  it("makes entire card clickable with correct project link", () => {
     render(<ProjectCard project={projectWithSlug} />);
 
-    // Check title link
-    const titleLink = screen.getByText(projectWithSlug.title).closest("a");
-    expect(titleLink).toHaveAttribute(
+    const cardLink = screen.getByRole("link");
+    expect(cardLink).toHaveAttribute(
       "href",
       `/projects/${projectWithSlug.slug}`,
     );
-
-    // Check image link
-    const imageLink = screen.getByRole("img").closest("a");
-    expect(imageLink).toHaveAttribute(
-      "href",
-      `/projects/${projectWithSlug.slug}`,
-    );
+    expect(cardLink).toHaveClass("block");
   });
 });

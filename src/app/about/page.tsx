@@ -35,14 +35,14 @@ export default async function AboutPage() {
             <span className="text-terminal-text terminal-text ml-2"></span>
           </h1>
           <div className="flex flex-col md:flex-row gap-8 mb-8">
-            <div className="md:w-1/3">
-              <div className="relative w-full aspect-square overflow-hidden rounded-lg border-2 border-terminal-selection/50 bg-terminal-selection/30">
+            <div className="flex justify-center md:justify-start md:w-1/3">
+              <div className="relative w-64 h-64 md:w-full md:h-[360px] overflow-hidden rounded-lg border-2 border-terminal-selection/50 bg-terminal-selection/30">
                 <Image
                   src="/media/headshot.webp"
                   alt="Chris Hacker"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 33vw"
+                  sizes="(max-width: 768px) 256px, 33vw"
                   priority
                 />
               </div>

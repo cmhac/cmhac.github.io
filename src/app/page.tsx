@@ -77,7 +77,7 @@ export default async function Home() {
         <section className="mb-16">
           <h2 className="text-2xl font-mono font-bold mb-8 flex items-center">
             <span className="text-terminal-green">➜</span>
-            <span className="text-terminal-purple ml-2">featured_projects</span>
+            <span className="text-terminal-purple ml-2">featured projects</span>
             <span className="text-terminal-text terminal-text ml-2"></span>
           </h2>
           <div className="flex flex-col space-y-8">
@@ -90,7 +90,7 @@ export default async function Home() {
               href="/projects"
               className="inline-flex items-center px-6 py-3 bg-terminal-selection/30 text-terminal-text border border-terminal-selection rounded-lg hover:bg-terminal-selection transition-all duration-300 font-mono"
             >
-              ➜ explore_all_projects
+              ➜ explore all projets
             </Link>
           </div>
         </section>

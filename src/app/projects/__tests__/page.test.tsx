@@ -129,11 +129,8 @@ describe("Projects Page", () => {
     const prompt = screen.getByText("➜");
     expect(prompt).toHaveClass("text-terminal-green");
 
-    const command = screen.getByText("ls");
+    const command = screen.getByText("projects");
     expect(command).toHaveClass("text-terminal-purple");
-
-    const path = screen.getByText("~/projects");
-    expect(path).toHaveClass("text-terminal-text");
   });
 
   it("renders all projects in a vertical stack", async () => {
@@ -177,7 +174,7 @@ describe("Projects Page", () => {
     render(await ProjectsPage());
 
     // Check if terminal-style project links are present
-    const links = screen.getAllByText("➜ explore_project");
+    const links = screen.getAllByText("➜ explore project");
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute("href", "https://example.com");
   });

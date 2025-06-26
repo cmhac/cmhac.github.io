@@ -43,7 +43,7 @@ jest.mock("@/components/ProjectCard", () => {
         <h3>{project.title}</h3>
         <p>{project.description}</p>
         {project.image && <img src={project.image} alt={project.title} />}
-        <a href={project.url}>$ explore_project</a>
+        <a href={project.url}>$ explore project</a>
       </div>
     );
   };
@@ -87,7 +87,7 @@ describe("Home Page", () => {
   it("renders featured projects section with terminal styling", async () => {
     render(await Home());
 
-    const sectionTitle = screen.getByText("featured_projects");
+    const sectionTitle = screen.getByText("featured projects");
     expect(sectionTitle).toHaveClass("text-terminal-purple");
 
     const projectCards = screen.getAllByTestId("project-card");
@@ -104,11 +104,11 @@ describe("Home Page", () => {
 
   it("renders project cards with terminal-style links", async () => {
     render(await Home());
-    const projectLinks = screen.getAllByText("$ explore_project");
+    const projectLinks = screen.getAllByText("$ explore project");
     expect(projectLinks[0]).toHaveAttribute("href", "https://example.com");
     expect(projectLinks[1]).toHaveAttribute("href", "https://example.com");
 
-    const exploreAllLink = screen.getByText("➜ explore_all_projects");
+    const exploreAllLink = screen.getByText("➜ explore all projets");
     expect(exploreAllLink).toHaveAttribute("href", "/projects");
     expect(exploreAllLink).toHaveClass(
       "bg-terminal-selection/30",

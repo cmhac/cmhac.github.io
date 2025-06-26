@@ -10,7 +10,7 @@ export default async function ProjectsPage() {
       <main className="container mx-auto px-4 py-16">
         <section className="mb-16">
           <h1 className="text-3xl font-mono font-bold mb-8 flex items-center">
-            <span className="text-terminal-green">$</span>
+            <span className="text-terminal-green">➜</span>
             <span className="text-terminal-purple ml-2">ls</span>
             <span className="text-terminal-text ml-2">~/projects</span>
           </h1>

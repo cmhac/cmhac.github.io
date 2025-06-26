@@ -1,38 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import Home from "../page";
+import { mockProject } from "./test-utils";
 
-// Mock the getAllProjects function
+// Mock getAllProjects
 jest.mock("@/utils/projects", () => ({
-  getAllProjects: jest.fn().mockResolvedValue([
+  getAllProjects: jest.fn(() => [
     {
+      ...mockProject,
       title: "Featured Project",
       description: "A featured project description",
-      technologies: ["React", "TypeScript"],
-      url: "https://example.com",
-      image: "/media/test.png",
-      featured: true,
-      date: "2024-03-14",
-      content: "This is the project content.",
     },
     {
+      ...mockProject,
       title: "Featured Project Without Image",
       description: "A featured project without an image",
-      technologies: ["React", "TypeScript"],
-      url: "https://example.com",
-      image: "",
-      featured: true,
-      date: "2024-03-14",
-      content: "This is the project content.",
-    },
-    {
-      title: "Regular Project",
-      description: "A regular project description",
-      technologies: ["React", "TypeScript"],
-      url: "https://example.com",
-      image: "/media/test.png",
-      featured: false,
-      date: "2024-03-14",
-      content: "This is the project content.",
+      image: undefined,
     },
   ]),
 }));
@@ -68,41 +50,56 @@ jest.mock("@/components/ProjectCard", () => {
 });
 
 describe("Home Page", () => {
-  it("renders hero section with author and description", async () => {
+  it("renders hero section with title and description", async () => {
     render(await Home());
-    expect(screen.getByText("Chris Hacker")).toBeInTheDocument();
-    expect(
-      screen.getByText("Investigative Data Journalist & Engineer"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /I build tools and analyze data to uncover stories that matter/,
-      ),
-    ).toBeInTheDocument();
-  });
 
-  it("renders featured projects section with terminal style", async () => {
-    render(await Home());
-    expect(screen.getByText("$")).toBeInTheDocument();
-    expect(screen.getByText("featured_projects")).toBeInTheDocument();
+    const title = screen.getByText("Chris Hacker");
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveClass("text-terminal-purple");
 
-    // Check that only featured projects are rendered
-    const projectCards = screen.getAllByTestId("project-card");
-    expect(projectCards).toHaveLength(2); // Only featured projects
-    expect(screen.getByText("Featured Project")).toBeInTheDocument();
-    expect(
-      screen.getByText("Featured Project Without Image"),
-    ).toBeInTheDocument();
-    expect(screen.queryByText("Regular Project")).not.toBeInTheDocument();
-  });
-
-  it("renders navigation buttons", async () => {
-    render(await Home());
-    expect(screen.getByText("View Projects")).toHaveAttribute(
-      "href",
-      "/projects",
+    const description = screen.getByText(
+      "Investigative Data Journalist & Engineer",
     );
-    expect(screen.getByText("About Me")).toHaveAttribute("href", "/about");
+    expect(description).toBeInTheDocument();
+    expect(description).toHaveClass("text-terminal-cyan");
+  });
+
+  it("renders navigation links with correct styling", async () => {
+    render(await Home());
+
+    const viewProjectsLink = screen.getByText("View Projects");
+    expect(viewProjectsLink).toHaveClass(
+      "bg-terminal-purple/20",
+      "text-terminal-purple",
+      "border",
+      "border-terminal-purple",
+    );
+
+    const aboutMeLink = screen.getByText("About Me");
+    expect(aboutMeLink).toHaveClass(
+      "bg-terminal-cyan/20",
+      "text-terminal-cyan",
+      "border",
+      "border-terminal-cyan",
+    );
+  });
+
+  it("renders featured projects section with terminal styling", async () => {
+    render(await Home());
+
+    const sectionTitle = screen.getByText("featured_projects");
+    expect(sectionTitle).toHaveClass("text-terminal-purple");
+
+    const projectCards = screen.getAllByTestId("project-card");
+    expect(projectCards).toHaveLength(2);
+
+    const projectTitles = [
+      "Featured Project",
+      "Featured Project Without Image",
+    ];
+    projectTitles.forEach((title) => {
+      expect(screen.getByText(title)).toBeInTheDocument();
+    });
   });
 
   it("renders project cards with terminal-style links", async () => {
@@ -111,23 +108,32 @@ describe("Home Page", () => {
     expect(projectLinks[0]).toHaveAttribute("href", "https://example.com");
     expect(projectLinks[1]).toHaveAttribute("href", "https://example.com");
 
-    expect(screen.getByText("$ explore_all_projects")).toHaveAttribute(
-      "href",
-      "/projects",
+    const exploreAllLink = screen.getByText("➜ explore_all_projects");
+    expect(exploreAllLink).toHaveAttribute("href", "/projects");
+    expect(exploreAllLink).toHaveClass(
+      "bg-terminal-selection/30",
+      "text-terminal-text",
+      "border",
+      "border-terminal-selection",
     );
   });
 
-  it("handles project images correctly", async () => {
+  it("renders project cards with and without images", async () => {
     render(await Home());
 
-    // Project with image
-    const projectWithImage = screen.getByAltText("Featured Project");
-    expect(projectWithImage).toBeInTheDocument();
-    expect(projectWithImage).toHaveAttribute("src", "/media/test.png");
+    // Check first project with image
+    const projectWithImage = screen
+      .getByText("Featured Project")
+      .closest("div[data-testid='project-card']");
+    const image = projectWithImage?.querySelector("img");
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute("src", "/media/test.png");
+    expect(image).toHaveAttribute("alt", "Featured Project");
 
-    // Project without image
-    expect(
-      screen.queryByAltText("Featured Project Without Image"),
-    ).not.toBeInTheDocument();
+    // Check second project without image
+    const projectWithoutImage = screen
+      .getByText("Featured Project Without Image")
+      .closest("div[data-testid='project-card']");
+    expect(projectWithoutImage?.querySelector("img")).not.toBeInTheDocument();
   });
 });

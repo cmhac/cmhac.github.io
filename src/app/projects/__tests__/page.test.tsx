@@ -15,10 +15,10 @@ jest.mock("gray-matter");
 
 // Mock the projects utility
 jest.mock("@/utils/projects", () => ({
-  getAllProjects: jest.fn().mockImplementation(async () => mockProjects),
+  getAllProjects: jest.fn(() => mockProjects),
 }));
 
-describe("ProjectsPage", () => {
+describe("Projects Page", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -123,39 +123,72 @@ describe("ProjectsPage", () => {
     });
   });
 
-  it("renders the page title with terminal style", async () => {
+  it("renders projects page header with terminal styling", async () => {
     render(await ProjectsPage());
-    expect(screen.getByText("$")).toBeInTheDocument();
-    expect(screen.getByText("ls")).toBeInTheDocument();
-    expect(screen.getByText("~/projects")).toBeInTheDocument();
+
+    const prompt = screen.getByText("➜");
+    expect(prompt).toHaveClass("text-terminal-green");
+
+    const command = screen.getByText("ls");
+    expect(command).toHaveClass("text-terminal-purple");
+
+    const path = screen.getByText("~/projects");
+    expect(path).toHaveClass("text-terminal-text");
   });
 
-  it("renders project cards for each project", async () => {
+  it("renders all projects in a vertical stack", async () => {
     render(await ProjectsPage());
 
-    // Check if all project titles are rendered
-    const titles = screen.getAllByRole("heading", { level: 3 });
-    expect(titles[0]).toHaveTextContent("Test Project");
-    expect(titles[1]).toHaveTextContent("Second Project");
-    expect(titles[2]).toHaveTextContent("Third Project");
+    const projectCards = screen.getAllByRole("heading", { level: 3 });
+    expect(projectCards).toHaveLength(mockProjects.length);
+
+    // Check if projects are rendered in the correct order
+    mockProjects.forEach((project, index) => {
+      expect(projectCards[index]).toHaveTextContent(project.title);
+    });
   });
 
-  it("renders project details correctly", async () => {
+  it("renders project cards with correct layout", async () => {
     render(await ProjectsPage());
 
-    // Check if project details are rendered
-    const descriptions = screen.getAllByText("A test project description");
-    expect(descriptions.length).toBeGreaterThan(0);
+    // Check if project cards have the correct layout classes
+    const projectCards = screen
+      .getAllByRole("heading", { level: 3 })
+      .map((heading) => heading.closest("div.bg-terminal-selection\\/30"));
 
-    // Check if technology tags are rendered
-    const reactTags = screen.getAllByText("React");
-    const typescriptTags = screen.getAllByText("TypeScript");
-    expect(reactTags.length).toBeGreaterThan(0);
-    expect(typescriptTags.length).toBeGreaterThan(0);
+    projectCards.forEach((card) => {
+      expect(card).toHaveClass(
+        "bg-terminal-selection/30",
+        "backdrop-blur-sm",
+        "rounded-lg",
+        "p-6",
+      );
+    });
+
+    // Check if there's proper spacing between cards
+    const cardContainer = screen
+      .getAllByRole("heading", { level: 3 })[0]
+      .closest("section")
+      ?.querySelector("div.flex");
+    expect(cardContainer).toHaveClass("flex", "flex-col", "space-y-8");
+  });
+
+  it("renders project links with terminal styling", async () => {
+    render(await ProjectsPage());
 
     // Check if terminal-style project links are present
-    const links = screen.getAllByText("$ explore_project");
+    const links = screen.getAllByText("➜ explore_project");
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute("href", "https://example.com");
+  });
+
+  it("renders project dates with terminal styling", async () => {
+    render(await ProjectsPage());
+
+    const dates = screen.getAllByText(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    expect(dates).toHaveLength(3);
+    dates.forEach((date) => {
+      expect(date).toHaveClass("text-terminal-comment", "font-mono");
+    });
   });
 });

@@ -62,7 +62,7 @@ describe("ProjectCard", () => {
   it("renders terminal-style project link", () => {
     render(<ProjectCard project={mockProject} />);
 
-    const link = screen.getByText("$ explore_project");
+    const link = screen.getByText("➜ explore_project");
     expect(link).toHaveAttribute("href", mockProject.url);
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");

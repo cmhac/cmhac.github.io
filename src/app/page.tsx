@@ -60,10 +60,14 @@ export default async function Home() {
                 priority
               />
             </div>
-            <h1 className="text-5xl font-bold mb-6 font-mono">
-              <span className="text-terminal-cyan">{siteSettings.author}</span>
-              <span className="text-terminal-text"> | </span>
-              <span className="text-terminal-text">
+            <h1 className="text-5xl font-bold mb-6 font-mono flex flex-wrap justify-center gap-x-2">
+              <span className="text-terminal-cyan whitespace-nowrap">
+                {siteSettings.author}
+              </span>
+              <span className="text-terminal-text whitespace-nowrap">
+                &nbsp;|&nbsp;
+              </span>
+              <span className="text-terminal-text whitespace-nowrap">
                 {siteSettings.description}
               </span>
             </h1>

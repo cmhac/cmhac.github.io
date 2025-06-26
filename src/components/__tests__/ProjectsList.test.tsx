@@ -16,8 +16,8 @@ describe("ProjectsList", () => {
 
     // Click on a technology filter
     const filterButtons = screen.getAllByRole("button");
-    const reactButton = filterButtons.find(
-      (button) => button.textContent === "React",
+    const reactButton = filterButtons.find((button) =>
+      button.textContent?.includes("React"),
     );
     if (!reactButton) throw new Error("React button not found");
     fireEvent.click(reactButton);
@@ -37,8 +37,8 @@ describe("ProjectsList", () => {
 
     // First filter by technology
     const filterButtons = screen.getAllByRole("button");
-    const reactButton = filterButtons.find(
-      (button) => button.textContent === "React",
+    const reactButton = filterButtons.find((button) =>
+      button.textContent?.includes("React"),
     );
     if (!reactButton) throw new Error("React button not found");
     fireEvent.click(reactButton);
@@ -69,8 +69,8 @@ describe("ProjectsList", () => {
 
     // Each technology should appear only once in the filter
     const filterButtons = screen.getAllByRole("button");
-    const reactButtons = filterButtons.filter(
-      (button) => button.textContent === "React",
+    const reactButtons = filterButtons.filter((button) =>
+      button.textContent?.includes("React"),
     );
     expect(reactButtons).toHaveLength(1);
   });
@@ -107,11 +107,11 @@ describe("ProjectsList", () => {
     // Angular, TypeScript (2 occurrences each, alphabetical)
     // Node.js, Vue (1 occurrence each, alphabetical)
     expect(techButtons).toEqual([
-      "React",
-      "Angular",
-      "TypeScript",
-      "Node.js",
-      "Vue",
+      "React (3)",
+      "Angular (2)",
+      "TypeScript (2)",
+      "Node.js (1)",
+      "Vue (1)",
     ]);
   });
 });

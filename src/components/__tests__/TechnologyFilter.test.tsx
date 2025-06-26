@@ -2,7 +2,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import TechnologyFilter from "../TechnologyFilter";
 
 describe("TechnologyFilter", () => {
-  const mockTechnologies = ["React", "TypeScript", "Node.js"];
+  type MockTechnology = "React" | "TypeScript" | "Node.js";
+  const mockTechnologies: MockTechnology[] = ["React", "TypeScript", "Node.js"];
+  const mockTechnologyCounts: Record<MockTechnology, number> = {
+    React: 3,
+    TypeScript: 2,
+    "Node.js": 1,
+  };
   const mockOnTechnologySelect = jest.fn();
 
   beforeEach(() => {
@@ -13,6 +19,7 @@ describe("TechnologyFilter", () => {
     render(
       <TechnologyFilter
         technologies={mockTechnologies}
+        technologyCounts={mockTechnologyCounts}
         selectedTechnology={null}
         onTechnologySelect={mockOnTechnologySelect}
       />,
@@ -29,10 +36,12 @@ describe("TechnologyFilter", () => {
     }).parentElement;
     expect(filterContainer).toHaveClass("flex", "flex-wrap", "gap-2");
 
-    // Check buttons
+    // Check buttons with counts
     expect(screen.getByText("all")).toBeInTheDocument();
     mockTechnologies.forEach((tech) => {
-      expect(screen.getByText(tech)).toBeInTheDocument();
+      expect(
+        screen.getByText(`${tech} (${mockTechnologyCounts[tech]})`),
+      ).toBeInTheDocument();
     });
   });
 
@@ -40,18 +49,19 @@ describe("TechnologyFilter", () => {
     render(
       <TechnologyFilter
         technologies={mockTechnologies}
+        technologyCounts={mockTechnologyCounts}
         selectedTechnology="React"
         onTechnologySelect={mockOnTechnologySelect}
       />,
     );
 
-    const selectedButton = screen.getByText("React");
+    const selectedButton = screen.getByText("React (3)");
     expect(selectedButton).toHaveClass(
       "bg-terminal-purple",
       "text-terminal-text",
     );
 
-    const unselectedButton = screen.getByText("TypeScript");
+    const unselectedButton = screen.getByText("TypeScript (2)");
     expect(unselectedButton).toHaveClass(
       "bg-terminal-selection/50",
       "text-terminal-text/80",
@@ -62,12 +72,13 @@ describe("TechnologyFilter", () => {
     render(
       <TechnologyFilter
         technologies={mockTechnologies}
+        technologyCounts={mockTechnologyCounts}
         selectedTechnology={null}
         onTechnologySelect={mockOnTechnologySelect}
       />,
     );
 
-    fireEvent.click(screen.getByText("React"));
+    fireEvent.click(screen.getByText("React (3)"));
     expect(mockOnTechnologySelect).toHaveBeenCalledWith("React");
   });
 
@@ -75,6 +86,7 @@ describe("TechnologyFilter", () => {
     render(
       <TechnologyFilter
         technologies={mockTechnologies}
+        technologyCounts={mockTechnologyCounts}
         selectedTechnology="React"
         onTechnologySelect={mockOnTechnologySelect}
       />,

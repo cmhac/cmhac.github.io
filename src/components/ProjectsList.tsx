@@ -14,7 +14,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     null,
   );
 
-  const uniqueTechnologies = useMemo(() => {
+  const { uniqueTechnologies, technologyCounts } = useMemo(() => {
     // Count frequency of each technology
     const techCount = new Map<string, number>();
     projects.forEach((project) => {
@@ -24,7 +24,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     });
 
     // Convert to array and sort by frequency (descending) then alphabetically
-    return Array.from(techCount.entries())
+    const sortedTechs = Array.from(techCount.entries())
       .sort(([techA, countA], [techB, countB]) => {
         if (countA !== countB) {
           return countB - countA; // Sort by frequency first
@@ -32,6 +32,14 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         return techA.localeCompare(techB); // Then alphabetically
       })
       .map(([tech]) => tech);
+
+    // Convert Map to plain object for easier access in TechnologyFilter
+    const countsObject = Object.fromEntries(techCount.entries());
+
+    return {
+      uniqueTechnologies: sortedTechs,
+      technologyCounts: countsObject,
+    };
   }, [projects]);
 
   const filteredProjects = useMemo(() => {
@@ -45,6 +53,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     <div>
       <TechnologyFilter
         technologies={uniqueTechnologies}
+        technologyCounts={technologyCounts}
         selectedTechnology={selectedTechnology}
         onTechnologySelect={setSelectedTechnology}
       />

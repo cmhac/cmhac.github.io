@@ -4,12 +4,14 @@ import { useState } from "react";
 
 interface TechnologyFilterProps {
   technologies: string[];
+  technologyCounts: Record<string, number>;
   selectedTechnology: string | null;
   onTechnologySelect: (technology: string | null) => void;
 }
 
 export default function TechnologyFilter({
   technologies,
+  technologyCounts,
   selectedTechnology,
   onTechnologySelect,
 }: TechnologyFilterProps) {
@@ -39,7 +41,7 @@ export default function TechnologyFilter({
                 : "bg-terminal-selection/50 text-terminal-text/80 hover:bg-terminal-selection hover:text-terminal-text"
             }`}
           >
-            {tech}
+            {tech} ({technologyCounts[tech]})
           </button>
         ))}
       </div>

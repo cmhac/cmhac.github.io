@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function Navigation() {
   const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -19,6 +21,10 @@ export default function Navigation() {
       default:
         return "";
     }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -81,36 +87,60 @@ export default function Navigation() {
           <div className="sm:hidden flex items-center">
             <button
               type="button"
+              onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-terminal-text hover:text-terminal-purple focus:outline-none focus:ring-2 focus:ring-terminal-purple"
               aria-controls="mobile-menu"
-              aria-expanded="false"
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
-              <svg
-                className="block h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              {isMenuOpen ? (
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* Mobile menu */}
-      <div className="sm:hidden" id="mobile-menu">
+      <div
+        className={`sm:hidden ${isMenuOpen ? "block" : "hidden"}`}
+        id="mobile-menu"
+        data-testid="mobile-menu"
+      >
         <div className="pt-2 pb-3 space-y-1 bg-terminal-selection/50 backdrop-blur-sm">
           <Link
             href="/"
+            onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/")
                 ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"
@@ -121,6 +151,7 @@ export default function Navigation() {
           </Link>
           <Link
             href="/projects"
+            onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/projects")
                 ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"
@@ -131,6 +162,7 @@ export default function Navigation() {
           </Link>
           <Link
             href="/about"
+            onClick={() => setIsMenuOpen(false)}
             className={`block px-3 py-2 text-base font-medium border-l-2 ${
               isActive("/about")
                 ? "border-terminal-purple bg-terminal-selection text-terminal-cyan"

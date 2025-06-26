@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Navigation from "../Navigation";
 import { usePathname } from "next/navigation";
 
@@ -109,5 +109,78 @@ describe("Navigation", () => {
       .getByText("chris_hacker")
       .closest("div.flex");
     expect(mainFlexContainer).toHaveClass("flex", "justify-between", "h-16");
+  });
+
+  describe("Mobile Menu", () => {
+    it("starts with mobile menu hidden", () => {
+      (usePathname as jest.Mock).mockReturnValue("/");
+      render(<Navigation />);
+
+      const mobileMenu = screen.getByTestId("mobile-menu");
+      expect(mobileMenu).toHaveClass("hidden");
+    });
+
+    it("toggles mobile menu visibility when button is clicked", () => {
+      (usePathname as jest.Mock).mockReturnValue("/");
+      render(<Navigation />);
+
+      const menuButton = screen.getByRole("button", {
+        name: /open main menu/i,
+      });
+      const mobileMenu = screen.getByTestId("mobile-menu");
+      expect(mobileMenu).toHaveClass("hidden");
+
+      // Open menu
+      fireEvent.click(menuButton);
+      expect(mobileMenu).toHaveClass("block");
+      expect(menuButton).toHaveAttribute("aria-expanded", "true");
+
+      // Close menu
+      fireEvent.click(menuButton);
+      expect(mobileMenu).toHaveClass("hidden");
+      expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("closes mobile menu when a link is clicked", () => {
+      (usePathname as jest.Mock).mockReturnValue("/");
+      render(<Navigation />);
+
+      // Open menu
+      const menuButton = screen.getByRole("button", {
+        name: /open main menu/i,
+      });
+      fireEvent.click(menuButton);
+
+      // Click a link
+      const mobileLink = screen.getAllByText("~/projects")[1]; // Get the mobile menu link
+      fireEvent.click(mobileLink);
+
+      // Check if menu is closed
+      const mobileMenu = screen.getByTestId("mobile-menu");
+      expect(mobileMenu).toHaveClass("hidden");
+    });
+
+    it("shows different icons for menu open/closed states", () => {
+      (usePathname as jest.Mock).mockReturnValue("/");
+      render(<Navigation />);
+
+      const menuButton = screen.getByRole("button", {
+        name: /open main menu/i,
+      });
+
+      // Initial state (hamburger icon)
+      const initialPath = menuButton.querySelector("path");
+      expect(initialPath).toHaveAttribute("d", "M4 6h16M4 12h16M4 18h16");
+
+      // Click to open (X icon)
+      fireEvent.click(menuButton);
+      const openPath = menuButton.querySelector("path");
+      expect(openPath).toHaveAttribute("d", "M6 18L18 6M6 6l12 12");
+
+      // Click to close (back to hamburger)
+      fireEvent.click(menuButton);
+      const closedPath = menuButton.querySelector("path");
+      expect(closedPath).toHaveAttribute("d", "M4 6h16M4 12h16M4 18h16");
+    });
   });
 });

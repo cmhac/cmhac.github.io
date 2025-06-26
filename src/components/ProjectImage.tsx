@@ -23,17 +23,20 @@ export default function ProjectImage({
   // Handle both absolute and relative paths
   const imageSrc = src.startsWith("/") ? src : `/${src}`;
 
+  const handleError = () => {
+    console.error(`Failed to load image: ${imageSrc}`);
+    setHasError(true);
+  };
+
   return (
-    <div className="relative h-48">
-      <Image
-        src={imageSrc}
-        alt={alt}
-        fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        className={`object-cover ${className || ""}`}
-        priority={false}
-        onError={() => setHasError(true)}
-      />
-    </div>
+    <Image
+      src={imageSrc}
+      alt={alt}
+      fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      className={`object-cover ${className || ""}`}
+      priority={false}
+      onError={handleError}
+    />
   );
 }

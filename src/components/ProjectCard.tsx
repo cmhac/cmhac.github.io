@@ -18,7 +18,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         <div className="flex flex-col md:flex-row md:space-x-8">
           {project.image && (
             <div className="w-full md:w-1/3 mb-6 md:mb-0">
-              <div className="relative w-full h-48 md:h-full overflow-hidden rounded-lg">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
                 <ProjectImage
                   src={project.image}
                   alt={project.title}

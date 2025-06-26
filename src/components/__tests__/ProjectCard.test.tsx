@@ -28,14 +28,10 @@ describe("ProjectCard", () => {
       .closest("div.w-full.md\\:w-1\\/3");
     expect(imageWrapper).toHaveClass("w-full", "md:w-1/3", "mb-6", "md:mb-0");
 
-    const imageContainer = screen
-      .getByRole("img")
-      .closest("div.relative.w-full");
+    const imageContainer = screen.getByRole("img").closest("div.relative");
     expect(imageContainer).toHaveClass(
       "relative",
-      "w-full",
-      "h-48",
-      "md:h-full",
+      "aspect-[4/3]",
       "overflow-hidden",
       "rounded-lg",
     );

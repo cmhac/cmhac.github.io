@@ -38,7 +38,7 @@ describe("KonamiCode", () => {
     });
 
     expect(window.open).toHaveBeenCalledWith(
-      "https://portfolio-site-cms.vercel.app/cmhac/portfolio-site/main/file/site",
+      "https://portfolio-site-cms.vercel.app/cmhac/cmhac.github.io/main/collection/projects",
       "_blank",
     );
   });

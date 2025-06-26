@@ -37,7 +37,7 @@ export default function KonamiCode() {
 
         if (match) {
           window.open(
-            "https://portfolio-site-cms.vercel.app/cmhac/portfolio-site/main/file/site",
+            "https://portfolio-site-cms.vercel.app/cmhac/cmhac.github.io/main/collection/projects",
             "_blank",
           );
         }

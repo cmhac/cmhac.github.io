@@ -18,8 +18,12 @@ describe("Navigation", () => {
 
     expect(screen.getByText("chris_hacker")).toBeInTheDocument();
     expect(screen.queryByText("data")).not.toBeInTheDocument();
-    expect(screen.queryByText("projects")).not.toBeInTheDocument();
-    expect(screen.queryByText("about")).not.toBeInTheDocument();
+    // Get the navigation links specifically
+    const projectsLinks = screen.getAllByText("projects");
+    const aboutLinks = screen.getAllByText("about");
+    // Check that they are in the navigation section
+    expect(projectsLinks[0].closest("div.hidden")).toHaveClass("sm:flex");
+    expect(aboutLinks[0].closest("div.hidden")).toHaveClass("sm:flex");
   });
 
   it("renders correctly on projects page", () => {
@@ -27,14 +31,16 @@ describe("Navigation", () => {
     render(<Navigation />);
 
     expect(screen.getByText("chris_hacker")).toBeInTheDocument();
-    const projectsText = screen.getByText("projects");
+    // Get the path display text specifically
+    const projectsText = screen.getByText("projects", {
+      selector: "span.text-terminal-green",
+    });
     expect(projectsText).toBeInTheDocument();
     expect(projectsText).toHaveClass(
       "text-terminal-green",
       "group-hover:text-terminal-text/50",
     );
     expect(screen.queryByText("data")).not.toBeInTheDocument();
-    expect(screen.queryByText("about")).not.toBeInTheDocument();
   });
 
   it("renders correctly on about page", () => {
@@ -42,14 +48,16 @@ describe("Navigation", () => {
     render(<Navigation />);
 
     expect(screen.getByText("chris_hacker")).toBeInTheDocument();
-    const aboutText = screen.getByText("about");
+    // Get the path display text specifically
+    const aboutText = screen.getByText("about", {
+      selector: "span.text-terminal-green",
+    });
     expect(aboutText).toBeInTheDocument();
     expect(aboutText).toHaveClass(
       "text-terminal-green",
       "group-hover:text-terminal-text/50",
     );
     expect(screen.queryByText("data")).not.toBeInTheDocument();
-    expect(screen.queryByText("projects")).not.toBeInTheDocument();
   });
 
   it("applies hover effect classes to logo", () => {
@@ -68,10 +76,15 @@ describe("Navigation", () => {
     (usePathname as jest.Mock).mockReturnValue("/projects");
     render(<Navigation />);
 
-    const projectsLink = screen.getAllByText("~/projects")[0];
+    // Get the navigation links specifically
+    const projectsLinks = screen.getAllByRole("link", { name: "projects" });
+    // Find the desktop navigation link (the first one)
+    const projectsLink = projectsLinks[0];
     expect(projectsLink).toHaveClass("text-terminal-cyan");
 
-    const homeLink = screen.getAllByText("~/home")[0];
+    const homeLinks = screen.getAllByRole("link", { name: "home" });
+    // Find the desktop navigation link (the first one)
+    const homeLink = homeLinks[0];
     expect(homeLink).toHaveClass("text-terminal-text");
   });
 
@@ -96,7 +109,9 @@ describe("Navigation", () => {
     expect(logo).toHaveClass("flex", "items-center");
 
     // Check navigation links container
-    const desktopNav = screen.getAllByText("~/home")[0].closest("div.hidden");
+    const homeLinks = screen.getAllByRole("link", { name: "home" });
+    // Find the desktop navigation link (the first one)
+    const desktopNav = homeLinks[0].closest("div.hidden");
     expect(desktopNav).toHaveClass(
       "hidden",
       "sm:flex",
@@ -151,8 +166,10 @@ describe("Navigation", () => {
       });
       fireEvent.click(menuButton);
 
-      // Click a link
-      const mobileLink = screen.getAllByText("~/projects")[1]; // Get the mobile menu link
+      // Click a link in the mobile menu
+      const projectsLinks = screen.getAllByRole("link", { name: "projects" });
+      // Get the mobile menu link (the second one)
+      const mobileLink = projectsLinks[1];
       fireEvent.click(mobileLink);
 
       // Check if menu is closed

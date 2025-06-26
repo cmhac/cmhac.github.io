@@ -59,7 +59,7 @@ export default function Navigation() {
                   : "text-terminal-text hover:text-terminal-purple"
               }`}
             >
-              ~/home
+              home
             </Link>
             <Link
               href="/projects"
@@ -69,7 +69,7 @@ export default function Navigation() {
                   : "text-terminal-text hover:text-terminal-purple"
               }`}
             >
-              ~/projects
+              projects
             </Link>
             <Link
               href="/about"
@@ -79,7 +79,7 @@ export default function Navigation() {
                   : "text-terminal-text hover:text-terminal-purple"
               }`}
             >
-              ~/about
+              about
             </Link>
           </div>
 
@@ -147,7 +147,7 @@ export default function Navigation() {
                 : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            ~/home
+            home
           </Link>
           <Link
             href="/projects"
@@ -158,7 +158,7 @@ export default function Navigation() {
                 : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            ~/projects
+            projects
           </Link>
           <Link
             href="/about"
@@ -169,7 +169,7 @@ export default function Navigation() {
                 : "border-transparent text-terminal-text hover:border-terminal-purple hover:text-terminal-purple"
             }`}
           >
-            ~/about
+            about
           </Link>
         </div>
       </div>

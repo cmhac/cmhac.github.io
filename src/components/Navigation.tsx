@@ -10,6 +10,17 @@ export default function Navigation() {
     return pathname === path;
   };
 
+  const getPathDisplay = () => {
+    switch (pathname) {
+      case "/projects":
+        return "projects";
+      case "/about":
+        return "about";
+      default:
+        return "";
+    }
+  };
+
   return (
     <nav className="bg-terminal/50 backdrop-blur-sm fixed w-full z-50 border-b border-terminal-selection">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,8 +31,15 @@ export default function Navigation() {
               href="/"
               className="text-xl font-mono font-bold text-terminal-purple hover:text-terminal-cyan transition-colors"
             >
-              chris_hacker<span className="text-terminal-text">/</span>
-              <span className="text-terminal-green">data</span>
+              chris_hacker
+              {getPathDisplay() && (
+                <>
+                  <span className="text-terminal-text">/</span>
+                  <span className="text-terminal-green">
+                    {getPathDisplay()}
+                  </span>
+                </>
+              )}
             </Link>
 
             {/* Navigation Links */}

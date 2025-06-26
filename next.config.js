@@ -4,9 +4,9 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
-  // Configure for GitHub Pages
-  basePath: process.env.NODE_ENV === "production" ? "/portfolio-site" : "", // Adjust this to match your repo name
-  assetPrefix: process.env.NODE_ENV === "production" ? "/portfolio-site/" : "",
+  // Configure for GitHub Pages root domain (cmhac.github.io)
+  basePath: "", // No basePath needed for root domain
+  assetPrefix: process.env.NODE_ENV === "production" ? "/" : "",
   // Ensure trailing slash is consistent
   trailingSlash: true,
 };

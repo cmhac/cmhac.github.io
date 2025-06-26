@@ -3,20 +3,25 @@ import ProjectCard from "../ProjectCard";
 import { mockProject } from "@/app/__tests__/test-utils";
 
 describe("ProjectCard", () => {
-  it("renders project title and description", () => {
-    render(<ProjectCard project={mockProject} />);
+  const projectWithSlug = {
+    ...mockProject,
+    slug: "test-project",
+  };
 
-    const title = screen.getByText(mockProject.title);
+  it("renders project title and description", () => {
+    render(<ProjectCard project={projectWithSlug} />);
+
+    const title = screen.getByText(projectWithSlug.title);
     expect(title).toBeInTheDocument();
     expect(title).toHaveClass("text-terminal-purple");
 
-    const description = screen.getByText(mockProject.description);
+    const description = screen.getByText(projectWithSlug.description);
     expect(description).toBeInTheDocument();
     expect(description).toHaveClass("text-terminal-text/80");
   });
 
   it("renders project image when provided", () => {
-    render(<ProjectCard project={mockProject} />);
+    render(<ProjectCard project={projectWithSlug} />);
 
     const imageWrapper = screen
       .getByRole("img")
@@ -36,7 +41,7 @@ describe("ProjectCard", () => {
     );
 
     const image = screen.getByRole("img");
-    expect(image).toHaveAttribute("alt", mockProject.title);
+    expect(image).toHaveAttribute("alt", projectWithSlug.title);
     expect(image).toHaveClass(
       "object-cover",
       "transition-transform",
@@ -46,9 +51,9 @@ describe("ProjectCard", () => {
   });
 
   it("renders technologies as terminal-style tags", () => {
-    render(<ProjectCard project={mockProject} />);
+    render(<ProjectCard project={projectWithSlug} />);
 
-    mockProject.technologies.forEach((tech) => {
+    projectWithSlug.technologies.forEach((tech) => {
       const tag = screen.getByText(tech);
       expect(tag).toBeInTheDocument();
       expect(tag).toHaveClass(
@@ -59,20 +64,27 @@ describe("ProjectCard", () => {
     });
   });
 
-  it("renders terminal-style project link", () => {
-    render(<ProjectCard project={mockProject} />);
+  it("renders project links with terminal styling", () => {
+    render(<ProjectCard project={projectWithSlug} />);
 
-    const link = screen.getByText("➜ explore project");
-    expect(link).toHaveAttribute("href", mockProject.url);
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    expect(link).toHaveClass("text-terminal-green", "font-mono");
+    const exploreLink = screen.getByText("➜ explore project");
+    expect(exploreLink).toHaveAttribute(
+      "href",
+      `/projects/${projectWithSlug.slug}`,
+    );
+    expect(exploreLink).toHaveClass("text-terminal-green", "font-mono");
+
+    const liveLink = screen.getByText("➜ view live");
+    expect(liveLink).toHaveAttribute("href", projectWithSlug.url);
+    expect(liveLink).toHaveAttribute("target", "_blank");
+    expect(liveLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(liveLink).toHaveClass("text-terminal-purple", "font-mono");
   });
 
   it("renders project content with terminal styling", () => {
-    render(<ProjectCard project={mockProject} />);
+    render(<ProjectCard project={projectWithSlug} />);
 
-    const content = screen.getByText(mockProject.content!);
+    const content = screen.getByText(projectWithSlug.content!);
     expect(content).toBeInTheDocument();
     const contentWrapper = content.closest(".prose");
     expect(contentWrapper).toHaveClass("prose-invert", "text-terminal-text/90");
@@ -80,7 +92,7 @@ describe("ProjectCard", () => {
 
   it("renders date with terminal styling", () => {
     const projectWithDate = {
-      ...mockProject,
+      ...projectWithSlug,
       date: "2024-03-14",
     };
 
@@ -102,6 +114,7 @@ describe("ProjectCard", () => {
       url: "https://example.com",
       image: "",
       featured: false,
+      slug: "minimal-project",
     };
 
     render(<ProjectCard project={minimalProject} />);
@@ -115,11 +128,11 @@ describe("ProjectCard", () => {
   });
 
   it("has correct layout structure", () => {
-    render(<ProjectCard project={mockProject} />);
+    render(<ProjectCard project={projectWithSlug} />);
 
     // Check main container
     const mainContainer = screen
-      .getByText(mockProject.title)
+      .getByText(projectWithSlug.title)
       .closest("div.bg-terminal-selection\\/30");
     expect(mainContainer).toHaveClass(
       "bg-terminal-selection/30",
@@ -131,21 +144,32 @@ describe("ProjectCard", () => {
 
     // Check flex container
     const flexContainer = screen
-      .getByText(mockProject.title)
+      .getByText(projectWithSlug.title)
       .closest("div.flex");
     expect(flexContainer).toHaveClass("flex", "flex-col", "md:flex-row");
 
     // Check content container
     const contentContainer = screen
-      .getByText(mockProject.description)
+      .getByText(projectWithSlug.description)
       .closest("div.flex-1");
     expect(contentContainer).toHaveClass("flex-1");
   });
 
-  it("does not render image section when image is not provided", () => {
-    const projectWithoutImage = { ...mockProject, image: undefined };
-    render(<ProjectCard project={projectWithoutImage} />);
+  it("makes title and image clickable with correct project link", () => {
+    render(<ProjectCard project={projectWithSlug} />);
 
-    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    // Check title link
+    const titleLink = screen.getByText(projectWithSlug.title).closest("a");
+    expect(titleLink).toHaveAttribute(
+      "href",
+      `/projects/${projectWithSlug.slug}`,
+    );
+
+    // Check image link
+    const imageLink = screen.getByRole("img").closest("a");
+    expect(imageLink).toHaveAttribute(
+      "href",
+      `/projects/${projectWithSlug.slug}`,
+    );
   });
 });

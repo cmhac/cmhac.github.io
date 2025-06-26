@@ -11,6 +11,44 @@ export interface Project {
   featured: boolean;
   date?: string;
   content?: string;
+  slug: string;
+}
+
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const projectsDir = path.join(process.cwd(), "src/content/projects");
+  const files = await fs.readdir(projectsDir);
+
+  for (const file of files) {
+    if (!file.endsWith(".md")) continue;
+
+    const content = await fs.readFile(path.join(projectsDir, file), "utf8");
+    const { data, content: markdownContent } = matter(content);
+    const projectSlug = generateSlug(data.title);
+
+    if (projectSlug === slug) {
+      return {
+        ...data,
+        title: data.title,
+        description: data.description,
+        technologies: data.technologies || [],
+        url: data.url || "",
+        image: data.image || "",
+        featured: data.featured || false,
+        date: data.date || new Date().toISOString(),
+        content: markdownContent,
+        slug: projectSlug,
+      } as Project;
+    }
+  }
+
+  return null;
 }
 
 export async function getAllProjects(): Promise<Project[]> {
@@ -26,7 +64,7 @@ export async function getAllProjects(): Promise<Project[]> {
             path.join(projectsDir, file),
             "utf8",
           );
-          const { data } = matter(content);
+          const { data, content: markdownContent } = matter(content);
           return {
             ...data,
             title: data.title,
@@ -36,6 +74,8 @@ export async function getAllProjects(): Promise<Project[]> {
             image: data.image || "",
             featured: data.featured || false,
             date: data.date || new Date().toISOString(),
+            content: markdownContent,
+            slug: generateSlug(data.title),
           } as Project;
         } catch (error) {
           console.error(`Error reading project file ${file}:`, error);

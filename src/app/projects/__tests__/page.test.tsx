@@ -1,136 +1,44 @@
 import { render, screen } from "@testing-library/react";
 import ProjectsPage from "../page";
-import { mockProjects } from "@/app/__tests__/test-utils";
-import matter from "gray-matter";
-import * as fs from "fs/promises";
+import { mockProject } from "@/app/__tests__/mockData";
 
-// Mock fs/promises module
-jest.mock("fs/promises", () => ({
-  readdir: jest.fn(),
-  readFile: jest.fn(),
-}));
+// Mock the project utilities
+const mockProjects = [
+  {
+    ...mockProject,
+    title: "Project 1",
+    description: "First test project description",
+    slug: "project-1",
+  },
+  {
+    ...mockProject,
+    title: "Project 2",
+    description: "Second test project description",
+    slug: "project-2",
+  },
+  {
+    ...mockProject,
+    title: "Project 3",
+    description: "Third test project description",
+    slug: "project-3",
+  },
+];
 
-// Mock gray-matter
-jest.mock("gray-matter");
-
-// Mock the projects utility
-jest.mock("@/utils/projects", () => ({
-  getAllProjects: jest.fn(() => mockProjects),
-}));
+jest.mock("@/utils/projects", () => {
+  return {
+    getAllProjects: () => Promise.resolve(mockProjects),
+  };
+});
 
 describe("Projects Page", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    // Mock fs.readdir to return test files
-    (fs.readdir as jest.Mock).mockResolvedValue([
-      "test-project.md",
-      "second-project.md",
-      "third-project.md",
-    ]);
-
-    // Mock fs.readFile to return markdown content
-    (fs.readFile as jest.Mock).mockImplementation((filePath) => {
-      const fileName = filePath.toString().split("/").pop();
-      let project;
-
-      switch (fileName) {
-        case "test-project.md":
-          project = mockProjects[0];
-          break;
-        case "second-project.md":
-          project = mockProjects[1];
-          break;
-        case "third-project.md":
-          project = mockProjects[2];
-          break;
-        default:
-          throw new Error(`Unknown test file: ${fileName}`);
-      }
-
-      // Create YAML frontmatter
-      const frontmatter = [
-        "---",
-        `title: ${project.title}`,
-        `description: ${project.description}`,
-        "technologies:",
-        ...project.technologies.map((tech) => `  - ${tech}`),
-        `url: ${project.url}`,
-        `image: ${project.image}`,
-        `featured: ${project.featured}`,
-        `date: ${project.date}`,
-        "---",
-        "",
-        project.content,
-      ].join("\n");
-
-      return Promise.resolve(frontmatter);
-    });
-
-    // Mock gray-matter to properly parse YAML frontmatter
-    (matter as unknown as jest.Mock).mockImplementation((content: string) => {
-      const parts = content.split("---");
-      if (parts.length < 3) {
-        throw new Error("Invalid frontmatter format");
-      }
-
-      const yamlContent = parts[1].trim();
-      const markdownContent = parts[2].trim();
-
-      const data: Record<string, any> = {};
-      let currentKey = "";
-      let currentArray: string[] = [];
-
-      yamlContent.split("\n").forEach((line) => {
-        const trimmedLine = line.trim();
-        if (!trimmedLine) return;
-
-        if (trimmedLine.startsWith("- ")) {
-          currentArray.push(trimmedLine.substring(2));
-        } else if (line.startsWith("  - ")) {
-          currentArray.push(line.substring(4));
-        } else if (line.includes(":")) {
-          if (currentKey && currentArray.length > 0) {
-            data[currentKey] = currentArray;
-            currentArray = [];
-          }
-
-          const [key, ...valueParts] = line.split(":");
-          const value = valueParts.join(":").trim();
-          currentKey = key.trim();
-
-          if (value) {
-            if (value === "true") {
-              data[currentKey] = true;
-            } else if (value === "false") {
-              data[currentKey] = false;
-            } else {
-              data[currentKey] = value;
-            }
-          }
-        }
-      });
-
-      // Handle the last array if any
-      if (currentKey && currentArray.length > 0) {
-        data[currentKey] = currentArray;
-      }
-
-      return {
-        data,
-        content: markdownContent,
-      };
-    });
-  });
-
-  it("renders projects page header with terminal styling", async () => {
+  it("renders page title with terminal styling", async () => {
     render(await ProjectsPage());
+
+    const title = screen.getByText("projects");
+    expect(title).toHaveClass("text-terminal-purple");
 
     const prompt = screen.getByText("➜");
     expect(prompt).toHaveClass("text-terminal-green");
-
-    const command = screen.getByText("projects");
-    expect(command).toHaveClass("text-terminal-purple");
   });
 
   it("renders all projects in a vertical stack", async () => {
@@ -176,7 +84,7 @@ describe("Projects Page", () => {
     // Check if terminal-style project links are present
     const links = screen.getAllByText("➜ explore project");
     expect(links).toHaveLength(3);
-    expect(links[0]).toHaveAttribute("href", "https://example.com");
+    expect(links[0]).toHaveAttribute("href", "/projects/project-1");
   });
 
   it("renders project dates with terminal styling", async () => {
@@ -186,6 +94,48 @@ describe("Projects Page", () => {
     expect(dates).toHaveLength(3);
     dates.forEach((date) => {
       expect(date).toHaveClass("text-terminal-comment", "font-mono");
+    });
+  });
+
+  it("renders project technologies with terminal styling", async () => {
+    render(await ProjectsPage());
+
+    mockProjects.forEach((project) => {
+      project.technologies.forEach((tech) => {
+        const techTags = screen.getAllByText(tech);
+        techTags.forEach((tag) => {
+          expect(tag).toHaveClass(
+            "bg-terminal-selection/50",
+            "text-terminal-cyan",
+            "font-mono",
+          );
+        });
+      });
+    });
+  });
+
+  it("renders project descriptions with correct styling", async () => {
+    render(await ProjectsPage());
+
+    mockProjects.forEach((project) => {
+      const description = screen.getByText(project.description);
+      expect(description).toHaveClass("text-terminal-text/80");
+    });
+  });
+
+  it("renders project images with correct layout", async () => {
+    render(await ProjectsPage());
+
+    const images = screen.getAllByRole("img");
+    expect(images).toHaveLength(mockProjects.length);
+
+    images.forEach((image) => {
+      expect(image).toHaveClass(
+        "object-cover",
+        "transition-transform",
+        "duration-500",
+        "hover:scale-110",
+      );
     });
   });
 });

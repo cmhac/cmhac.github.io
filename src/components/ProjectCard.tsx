@@ -10,6 +10,7 @@ interface Project {
   featured: boolean;
   date?: string;
   content?: string;
+  slug: string;
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
@@ -27,20 +28,24 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div className="flex flex-col md:flex-row md:space-x-8">
         {project.image && (
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
-            <div className="relative w-full h-48 md:h-full overflow-hidden rounded-lg">
-              <ProjectImage
-                src={project.image}
-                alt={project.title}
-                className="object-cover transition-transform duration-500 hover:scale-110"
-              />
-            </div>
+            <Link href={`/projects/${project.slug}`}>
+              <div className="relative w-full h-48 md:h-full overflow-hidden rounded-lg">
+                <ProjectImage
+                  src={project.image}
+                  alt={project.title}
+                  className="object-cover transition-transform duration-500 hover:scale-110"
+                />
+              </div>
+            </Link>
           </div>
         )}
         <div className={`flex-1 ${!project.image ? "pt-4" : ""}`}>
           <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-4">
-            <h3 className="text-xl font-mono font-bold text-terminal-purple">
-              {project.title}
-            </h3>
+            <Link href={`/projects/${project.slug}`}>
+              <h3 className="text-xl font-mono font-bold text-terminal-purple hover:text-terminal-cyan transition-colors">
+                {project.title}
+              </h3>
+            </Link>
             {project.date && (
               <p className="text-sm text-terminal-comment font-mono mt-2 md:mt-0">
                 {formatDate(project.date)}
@@ -71,14 +76,24 @@ export default function ProjectCard({ project }: { project: Project }) {
             </div>
           )}
 
-          <Link
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-terminal-green hover:text-terminal-cyan transition-colors font-mono"
-          >
-            ➜ explore project
-          </Link>
+          <div className="flex gap-4">
+            <Link
+              href={`/projects/${project.slug}`}
+              className="inline-flex items-center text-terminal-green hover:text-terminal-cyan transition-colors font-mono"
+            >
+              ➜ explore project
+            </Link>
+            {project.url && (
+              <Link
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-terminal-purple hover:text-terminal-cyan transition-colors font-mono"
+              >
+                ➜ view live
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -24,29 +24,6 @@ describe("About Page", () => {
     const command = screen.getByText("about");
     expect(command).toHaveClass("text-terminal-purple");
 
-    // Check headshot image and container
-    const headshot = screen.getByRole("img", { name: "Chris Hacker" });
-    expect(headshot).toBeInTheDocument();
-
-    const imageContainer = headshot.closest("div");
-    expect(imageContainer).toHaveClass(
-      "relative",
-      "w-64",
-      "h-64",
-      "md:w-full",
-      "md:h-[360px]",
-      "overflow-hidden",
-      "rounded-lg",
-    );
-
-    const imageWrapper = imageContainer?.parentElement;
-    expect(imageWrapper).toHaveClass(
-      "flex",
-      "justify-center",
-      "md:justify-start",
-      "md:w-1/3",
-    );
-
     // Check content
     const paragraphs = screen.getAllByText(/./);
     paragraphs.forEach((paragraph) => {

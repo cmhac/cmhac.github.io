@@ -1,6 +1,5 @@
 import { promises as fs } from "fs";
 import path from "path";
-import Image from "next/image";
 import Link from "next/link";
 import { getAllProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
@@ -43,12 +42,10 @@ function ProjectCard({ project }: { project: Project }) {
     <div className="bg-terminal-selection/30 backdrop-blur-sm rounded-lg p-6 card-hover border border-terminal-selection/50">
       {project.image && (
         <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg">
-          <Image
+          <ProjectImage
             src={project.image}
             alt={project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 hover:scale-110"
+            className="transition-transform duration-500 hover:scale-110"
           />
         </div>
       )}

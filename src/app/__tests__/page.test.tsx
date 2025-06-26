@@ -15,6 +15,16 @@ jest.mock("@/utils/projects", () => ({
       content: "This is the project content.",
     },
     {
+      title: "Featured Project Without Image",
+      description: "A featured project without an image",
+      technologies: ["React", "TypeScript"],
+      url: "https://example.com",
+      image: "",
+      featured: true,
+      date: "2024-03-14",
+      content: "This is the project content.",
+    },
+    {
       title: "Regular Project",
       description: "A regular project description",
       technologies: ["React", "TypeScript"],
@@ -42,6 +52,13 @@ jest.mock("fs/promises", () => ({
     }),
   ),
 }));
+
+// Mock the ProjectImage component
+jest.mock("@/components/ProjectImage", () => {
+  return function MockProjectImage({ src, alt }: { src: string; alt: string }) {
+    return src ? <img src={src} alt={alt} /> : null;
+  };
+});
 
 describe("Home Page", () => {
   it("renders hero section with author and description", async () => {
@@ -75,13 +92,27 @@ describe("Home Page", () => {
 
   it("renders project cards with terminal-style links", async () => {
     render(await Home());
-    expect(screen.getByText("$ explore_project")).toHaveAttribute(
-      "href",
-      "https://example.com",
-    );
+    const projectLinks = screen.getAllByText("$ explore_project");
+    expect(projectLinks[0]).toHaveAttribute("href", "https://example.com");
+    expect(projectLinks[1]).toHaveAttribute("href", "https://example.com");
+
     expect(screen.getByText("$ explore_all_projects")).toHaveAttribute(
       "href",
       "/projects",
     );
+  });
+
+  it("handles project images correctly", async () => {
+    render(await Home());
+
+    // Project with image
+    const projectWithImage = screen.getByAltText("Featured Project");
+    expect(projectWithImage).toBeInTheDocument();
+    expect(projectWithImage).toHaveAttribute("src", "/media/test.png");
+
+    // Project without image
+    expect(
+      screen.queryByAltText("Featured Project Without Image"),
+    ).not.toBeInTheDocument();
   });
 });

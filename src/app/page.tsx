@@ -5,6 +5,7 @@ import { getAllProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
 import ProjectCard from "@/components/ProjectCard";
 import Image from "next/image";
+import KonamiCode from "@/components/KonamiCode";
 
 // Types for our CMS content
 interface SiteSettings {
@@ -45,6 +46,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen pt-16">
+      <KonamiCode />
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16 animate-text-reveal">
           <div className="flex flex-col items-center mb-8">

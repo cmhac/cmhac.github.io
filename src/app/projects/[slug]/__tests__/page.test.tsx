@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import ProjectPage from "../page";
+import ProjectPage, { generateMetadata, generateStaticParams } from "../page";
 import { mockProject } from "@/app/__tests__/test-utils";
-import { getProjectBySlug, getAllProjects } from "@/utils/projects";
+import { getProjectBySlug, getAllProjects, Project } from "@/utils/projects";
 import { notFound } from "next/navigation";
 
 jest.mock("@/utils/projects");
@@ -21,6 +21,15 @@ const mockGetAllProjects = getAllProjects as jest.MockedFunction<
   typeof getAllProjects
 >;
 const mockNotFound = notFound as jest.MockedFunction<typeof notFound>;
+
+const minimalProject: Project = {
+  ...mockProject,
+  url: "",
+  image: "",
+  content: undefined,
+  technologies: [],
+  date: undefined,
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -83,5 +92,75 @@ describe("ProjectPage", () => {
   it("calls notFound for non-existent project", async () => {
     await ProjectPage({ params: { slug: "non-existent" } });
     expect(mockNotFound).toHaveBeenCalled();
+  });
+
+  it("renders project with minimal fields correctly", async () => {
+    mockGetProjectBySlug.mockResolvedValueOnce(minimalProject);
+    render(await ProjectPage({ params: { slug: "minimal-project" } }));
+
+    // Basic fields should be present
+    expect(screen.getByText(minimalProject.title)).toBeInTheDocument();
+    expect(screen.getByText(minimalProject.description)).toBeInTheDocument();
+
+    // Optional elements should not be present
+    expect(screen.queryByText("➜ view live project")).not.toBeInTheDocument();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("markdown-content")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/\d{1,2}\/\d{1,2}\/\d{4}/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("formats date correctly", async () => {
+    const projectWithDate: Project = {
+      ...mockProject,
+      date: "2024-03-14T12:00:00Z", // Using UTC time to avoid timezone issues
+    };
+    mockGetProjectBySlug.mockResolvedValueOnce(projectWithDate);
+    render(await ProjectPage({ params: { slug: "dated-project" } }));
+
+    // Use a regex pattern to match the date format (M/D/YYYY)
+    expect(screen.getByText(/^\d{1,2}\/\d{1,2}\/\d{4}$/)).toBeInTheDocument();
+  });
+
+  it("renders image without link when url is not provided", async () => {
+    const projectWithoutUrl: Project = {
+      ...mockProject,
+      url: "",
+    };
+    mockGetProjectBySlug.mockResolvedValueOnce(projectWithoutUrl);
+    render(await ProjectPage({ params: { slug: "no-url-project" } }));
+
+    const image = screen.getByRole("img");
+    expect(image).toBeInTheDocument();
+    expect(image.closest("a")).toBeNull();
+    expect(image).not.toHaveClass("hover:scale-105");
+  });
+});
+
+describe("generateMetadata", () => {
+  it("returns correct metadata for existing project", async () => {
+    const metadata = await generateMetadata({
+      params: { slug: "test-project" },
+    });
+    expect(metadata).toEqual({
+      title: `${mockProject.title} | Chris Hacker`,
+      description: mockProject.description,
+    });
+  });
+
+  it("returns not found metadata for non-existent project", async () => {
+    const metadata = await generateMetadata({
+      params: { slug: "non-existent" },
+    });
+    expect(metadata).toEqual({ title: "Project Not Found" });
+  });
+});
+
+describe("generateStaticParams", () => {
+  it("returns correct params for all projects", async () => {
+    const params = await generateStaticParams();
+    expect(params).toEqual([{ slug: mockProject.slug }]);
+    expect(mockGetAllProjects).toHaveBeenCalled();
   });
 });

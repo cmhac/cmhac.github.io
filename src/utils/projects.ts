@@ -6,8 +6,8 @@ export interface Project {
   title: string;
   description: string;
   technologies: string[];
-  url: string;
-  image: string;
+  url?: string;
+  image?: string;
   featured: boolean;
   date?: string;
   content?: string;

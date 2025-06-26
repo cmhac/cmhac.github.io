@@ -25,14 +25,9 @@ module.exports = {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       animation: {
-        "cursor-blink": "cursor 1s infinite",
         "text-reveal": "reveal 1.5s ease-in-out",
       },
       keyframes: {
-        cursor: {
-          "0%, 100%": { opacity: 1 },
-          "50%": { opacity: 0 },
-        },
         reveal: {
           "0%": {
             opacity: 0,

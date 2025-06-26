@@ -74,4 +74,44 @@ describe("ProjectsList", () => {
     );
     expect(reactButtons).toHaveLength(1);
   });
+
+  it("sorts technologies by frequency then alphabetically", () => {
+    const projectsWithVaryingTechFrequency = [
+      {
+        ...mockProjects[0],
+        title: "Project 1",
+        technologies: ["React", "TypeScript", "Node.js"],
+      },
+      {
+        ...mockProjects[0],
+        title: "Project 2",
+        technologies: ["React", "TypeScript", "Angular"],
+      },
+      {
+        ...mockProjects[0],
+        title: "Project 3",
+        technologies: ["React", "Vue", "Angular"],
+      },
+    ];
+
+    render(<ProjectsList projects={projectsWithVaryingTechFrequency} />);
+
+    // Get all technology buttons (excluding 'all')
+    const techButtons = screen
+      .getAllByRole("button")
+      .filter((button) => button.textContent !== "all")
+      .map((button) => button.textContent);
+
+    // Expected order:
+    // React (3 occurrences)
+    // Angular, TypeScript (2 occurrences each, alphabetical)
+    // Node.js, Vue (1 occurrence each, alphabetical)
+    expect(techButtons).toEqual([
+      "React",
+      "Angular",
+      "TypeScript",
+      "Node.js",
+      "Vue",
+    ]);
+  });
 });

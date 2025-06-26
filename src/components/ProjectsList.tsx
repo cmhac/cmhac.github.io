@@ -15,11 +15,23 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
   );
 
   const uniqueTechnologies = useMemo(() => {
-    const techSet = new Set<string>();
+    // Count frequency of each technology
+    const techCount = new Map<string, number>();
     projects.forEach((project) => {
-      project.technologies.forEach((tech) => techSet.add(tech));
+      project.technologies.forEach((tech) => {
+        techCount.set(tech, (techCount.get(tech) || 0) + 1);
+      });
     });
-    return Array.from(techSet).sort();
+
+    // Convert to array and sort by frequency (descending) then alphabetically
+    return Array.from(techCount.entries())
+      .sort(([techA, countA], [techB, countB]) => {
+        if (countA !== countB) {
+          return countB - countA; // Sort by frequency first
+        }
+        return techA.localeCompare(techB); // Then alphabetically
+      })
+      .map(([tech]) => tech);
   }, [projects]);
 
   const filteredProjects = useMemo(() => {

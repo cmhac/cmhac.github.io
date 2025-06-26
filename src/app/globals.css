@@ -28,12 +28,6 @@ body {
     sans-serif;
 }
 
-/* Terminal-style text effect */
-.terminal-text::after {
-  content: "|";
-  @apply animate-cursor-blink text-terminal-cyan;
-}
-
 /* Animated underline effect */
 .link-underline {
   @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-terminal-purple after:transition-transform after:duration-300 after:ease-out hover:after:origin-bottom-left hover:after:scale-x-100;

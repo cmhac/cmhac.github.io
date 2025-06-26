@@ -9,7 +9,7 @@ describe("TechnologyFilter", () => {
     jest.clearAllMocks();
   });
 
-  it("renders all technologies and 'all' button", () => {
+  it("renders header and filter buttons with correct layout", () => {
     render(
       <TechnologyFilter
         technologies={mockTechnologies}
@@ -18,6 +18,18 @@ describe("TechnologyFilter", () => {
       />,
     );
 
+    // Check header
+    const header = screen.getByText("filter by tool or technique");
+    expect(header).toBeInTheDocument();
+    expect(header).toHaveClass("text-sm", "font-mono", "text-terminal-comment");
+
+    // Check filter container
+    const filterContainer = screen.getByRole("button", {
+      name: "all",
+    }).parentElement;
+    expect(filterContainer).toHaveClass("flex", "flex-wrap", "gap-2");
+
+    // Check buttons
     expect(screen.getByText("all")).toBeInTheDocument();
     mockTechnologies.forEach((tech) => {
       expect(screen.getByText(tech)).toBeInTheDocument();

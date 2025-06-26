@@ -133,11 +133,11 @@ export default function Navigation() {
 
       {/* Mobile menu */}
       <div
-        className={`sm:hidden ${isMenuOpen ? "block" : "hidden"}`}
+        className={`sm:hidden absolute w-full ${isMenuOpen ? "block" : "hidden"}`}
         id="mobile-menu"
         data-testid="mobile-menu"
       >
-        <div className="pt-2 pb-3 space-y-1 bg-terminal-selection/50 backdrop-blur-sm">
+        <div className="pt-2 pb-3 space-y-1 bg-terminal/90 backdrop-blur-sm border-b border-terminal-selection">
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}

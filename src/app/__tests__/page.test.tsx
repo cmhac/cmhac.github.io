@@ -66,13 +66,46 @@ describe("Home Page", () => {
 
     const title = screen.getByText("Chris Hacker");
     expect(title).toBeInTheDocument();
-    expect(title).toHaveClass("text-terminal-cyan");
+    expect(title).toHaveClass("text-terminal-cyan", "whitespace-nowrap");
 
     const description = screen.getByText(
       "Investigative Data Journalist & Engineer",
     );
     expect(description).toBeInTheDocument();
     expect(description).toHaveClass("text-terminal-text");
+    expect(description).not.toHaveClass("whitespace-nowrap");
+
+    // Check header container has proper layout and constraints
+    const header = screen.getByRole("heading", { level: 1 });
+    expect(header).toHaveClass(
+      "flex",
+      "flex-wrap",
+      "justify-center",
+      "gap-2",
+      "min-h-[3.5rem]",
+      "items-center",
+      "max-w-[90vw]",
+      "mx-auto",
+    );
+  });
+
+  it("ensures proper text wrapping behavior", async () => {
+    render(await Home());
+
+    // Author name and separator should not wrap
+    const authorName = screen.getByText("Chris Hacker");
+    const separator = screen.getByText("|", { exact: false });
+    const authorSpan = authorName.closest("span");
+    const separatorSpan = separator.closest("span");
+
+    expect(authorSpan).toHaveClass("whitespace-nowrap");
+    expect(separatorSpan).toHaveClass("whitespace-nowrap");
+
+    // Description should be allowed to wrap
+    const description = screen.getByText(
+      "Investigative Data Journalist & Engineer",
+    );
+    expect(description.closest("span")).not.toHaveClass("whitespace-nowrap");
   });
 
   it("renders navigation links with correct styling", async () => {

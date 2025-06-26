@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import ProjectsPage from "../page";
-import { mockProject } from "@/app/__tests__/mockData";
+import { mockProject } from "@/app/__tests__/test-utils";
 
 // Mock the project utilities
 const mockProjects = [
@@ -71,10 +71,7 @@ describe("Projects Page", () => {
     });
 
     // Check if there's proper spacing between cards
-    const cardContainer = screen
-      .getAllByRole("heading", { level: 3 })[0]
-      .closest("section")
-      ?.querySelector("div.flex");
+    const cardContainer = screen.getByTestId("projects-list");
     expect(cardContainer).toHaveClass("flex", "flex-col", "space-y-8");
   });
 
@@ -104,11 +101,19 @@ describe("Projects Page", () => {
       project.technologies.forEach((tech) => {
         const techTags = screen.getAllByText(tech);
         techTags.forEach((tag) => {
-          expect(tag).toHaveClass(
-            "bg-terminal-selection/50",
-            "text-terminal-cyan",
-            "font-mono",
-          );
+          if (tag.tagName === "BUTTON") {
+            expect(tag).toHaveClass(
+              "bg-terminal-selection/50",
+              "text-terminal-text/80",
+              "font-mono",
+            );
+          } else {
+            expect(tag).toHaveClass(
+              "bg-terminal-selection/50",
+              "text-terminal-cyan",
+              "font-mono",
+            );
+          }
         });
       });
     });

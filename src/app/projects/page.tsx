@@ -1,6 +1,5 @@
 import { getAllProjects } from "@/utils/projects";
-import type { Project } from "@/utils/projects";
-import ProjectCard from "@/components/ProjectCard";
+import ProjectsList from "@/components/ProjectsList";
 
 export default async function ProjectsPage() {
   const projects = await getAllProjects();
@@ -14,11 +13,7 @@ export default async function ProjectsPage() {
             <span className="text-terminal-purple ml-2">projects</span>
             <span className="text-terminal-text terminal-text ml-2"></span>
           </h1>
-          <div className="flex flex-col space-y-8">
-            {projects.map((project) => (
-              <ProjectCard key={project.title} project={project} />
-            ))}
-          </div>
+          <ProjectsList projects={projects} />
         </section>
       </main>
     </div>

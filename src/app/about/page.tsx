@@ -38,7 +38,7 @@ export default async function AboutPage() {
             <div className="flex justify-center md:justify-start md:w-1/3">
               <div className="relative w-64 h-64 md:w-full md:h-[360px] overflow-hidden rounded-lg border-2 border-terminal-selection/50 bg-terminal-selection/30">
                 <Image
-                  src="/media/headshot.webp"
+                  src="media/headshot.webp"
                   alt="Chris Hacker"
                   fill
                   className="object-cover"

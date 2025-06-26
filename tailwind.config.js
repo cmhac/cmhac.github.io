@@ -9,15 +9,15 @@ module.exports = {
     extend: {
       colors: {
         terminal: {
-          DEFAULT: "#282A36",
+          DEFAULT: "#0A0A0A",
           text: "#F8F8F2",
-          comment: "#6272A4",
-          selection: "#44475A",
-          purple: "#BD93F9",
-          cyan: "#8BE9FD",
-          green: "#50FA7B",
-          orange: "#FFB86C",
-          red: "#FF5555",
+          comment: "#6D6D6D",
+          selection: "#1F1F1F",
+          purple: "#BA88AF", // Brightened mauve
+          cyan: "#5B7A86", // Brightened slate blue
+          green: "#7A8C76", // Brightened sage
+          orange: "#D19973", // Brightened dusty rose
+          red: "#A15454", // Brightened burgundy
         },
       },
       fontFamily: {

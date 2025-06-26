@@ -14,23 +14,38 @@ This portfolio is built with Next.js, TypeScript, Tailwind CSS, and Pages CMS, s
 }));
 
 describe("About Page", () => {
-  it("renders the about page content", async () => {
+  it("renders the about page with terminal styling", async () => {
     render(await AboutPage());
 
-    // Check title
-    expect(screen.getByText("About Me")).toBeInTheDocument();
+    // Check terminal-style header
+    const prompt = screen.getByText("➜");
+    expect(prompt).toHaveClass("text-terminal-green");
 
-    // Check paragraphs
-    expect(
-      screen.getByText(
-        "Welcome to my portfolio! I am a passionate developer who loves building modern web applications using cutting-edge technologies.",
-      ),
-    ).toBeInTheDocument();
+    const command = screen.getByText("about");
+    expect(command).toHaveClass("text-terminal-purple");
 
-    expect(
-      screen.getByText(
-        "This portfolio is built with Next.js, TypeScript, Tailwind CSS, and Pages CMS, showcasing my projects and skills in web development.",
-      ),
-    ).toBeInTheDocument();
+    // Check content
+    const paragraphs = screen.getAllByText(/./);
+    paragraphs.forEach((paragraph) => {
+      if (paragraph.tagName.toLowerCase() === "p") {
+        expect(paragraph).toHaveClass(
+          "text-terminal-text/80",
+          "text-lg",
+          "leading-relaxed",
+        );
+      }
+    });
+
+    // Check social links
+    const socialLinks = ["github", "linkedin", "twitter"].map((platform) =>
+      screen.getByText(`➜ ${platform}`),
+    );
+    socialLinks.forEach((link) => {
+      expect(link).toHaveClass(
+        "text-terminal-green",
+        "hover:text-terminal-cyan",
+        "font-mono",
+      );
+    });
   });
 });

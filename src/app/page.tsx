@@ -47,9 +47,9 @@ export default async function Home() {
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16 animate-text-reveal">
           <h1 className="text-5xl font-bold mb-6 font-mono">
-            <span className="text-terminal-purple">{siteSettings.author}</span>
+            <span className="text-terminal-cyan">{siteSettings.author}</span>
             <span className="text-terminal-text"> | </span>
-            <span className="text-terminal-cyan">
+            <span className="text-terminal-text">
               {siteSettings.description}
             </span>
           </h1>

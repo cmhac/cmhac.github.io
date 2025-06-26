@@ -55,13 +55,13 @@ describe("Home Page", () => {
 
     const title = screen.getByText("Chris Hacker");
     expect(title).toBeInTheDocument();
-    expect(title).toHaveClass("text-terminal-purple");
+    expect(title).toHaveClass("text-terminal-cyan");
 
     const description = screen.getByText(
       "Investigative Data Journalist & Engineer",
     );
     expect(description).toBeInTheDocument();
-    expect(description).toHaveClass("text-terminal-cyan");
+    expect(description).toHaveClass("text-terminal-text");
   });
 
   it("renders navigation links with correct styling", async () => {

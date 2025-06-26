@@ -13,9 +13,8 @@ export default async function ProjectsPage() {
             <span className="text-terminal-green">$</span>
             <span className="text-terminal-purple ml-2">ls</span>
             <span className="text-terminal-text ml-2">~/projects</span>
-            <span className="text-terminal-text terminal-text ml-2"></span>
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col space-y-8">
             {projects.map((project) => (
               <ProjectCard key={project.title} project={project} />
             ))}

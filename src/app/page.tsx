@@ -80,7 +80,7 @@ export default async function Home() {
             <span className="text-terminal-purple ml-2">featured_projects</span>
             <span className="text-terminal-text terminal-text ml-2"></span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col space-y-8">
             {featuredProjects.map((project) => (
               <ProjectCard key={project.title} project={project} />
             ))}

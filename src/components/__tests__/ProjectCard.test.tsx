@@ -18,13 +18,30 @@ describe("ProjectCard", () => {
   it("renders project image when provided", () => {
     render(<ProjectCard project={mockProject} />);
 
+    const imageWrapper = screen
+      .getByRole("img")
+      .closest("div.w-full.md\\:w-1\\/3");
+    expect(imageWrapper).toHaveClass("w-full", "md:w-1/3", "mb-6", "md:mb-0");
+
+    const imageContainer = screen
+      .getByRole("img")
+      .closest("div.relative.w-full");
+    expect(imageContainer).toHaveClass(
+      "relative",
+      "w-full",
+      "h-48",
+      "md:h-full",
+      "overflow-hidden",
+      "rounded-lg",
+    );
+
     const image = screen.getByRole("img");
     expect(image).toHaveAttribute("alt", mockProject.title);
-    expect(image).toHaveAttribute(
-      "class",
-      expect.stringContaining(
-        "transition-transform duration-500 hover:scale-110",
-      ),
+    expect(image).toHaveClass(
+      "object-cover",
+      "transition-transform",
+      "duration-500",
+      "hover:scale-110",
     );
   });
 
@@ -95,6 +112,34 @@ describe("ProjectCard", () => {
     expect(
       screen.queryByText(/\d{1,2}[/.]\d{1,2}[/.]\d{2,4}/),
     ).not.toBeInTheDocument();
+  });
+
+  it("has correct layout structure", () => {
+    render(<ProjectCard project={mockProject} />);
+
+    // Check main container
+    const mainContainer = screen
+      .getByText(mockProject.title)
+      .closest("div.bg-terminal-selection\\/30");
+    expect(mainContainer).toHaveClass(
+      "bg-terminal-selection/30",
+      "backdrop-blur-sm",
+      "rounded-lg",
+      "p-6",
+      "card-hover",
+    );
+
+    // Check flex container
+    const flexContainer = screen
+      .getByText(mockProject.title)
+      .closest("div.flex");
+    expect(flexContainer).toHaveClass("flex", "flex-col", "md:flex-row");
+
+    // Check content container
+    const contentContainer = screen
+      .getByText(mockProject.description)
+      .closest("div.flex-1");
+    expect(contentContainer).toHaveClass("flex-1");
   });
 
   it("does not render image section when image is not provided", () => {

@@ -123,7 +123,7 @@ export default async function ProjectPage({ params }: Props) {
             )}
 
             {project.content && (
-              <div className="prose prose-invert max-w-none">
+              <div className="prose prose-invert prose-p:mb-8 max-w-none">
                 <ReactMarkdown>{project.content}</ReactMarkdown>
               </div>
             )}

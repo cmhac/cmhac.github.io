@@ -1,17 +1,6 @@
 import Link from "next/link";
 import ProjectImage from "./ProjectImage";
-
-interface Project {
-  title: string;
-  description: string;
-  technologies: string[];
-  url: string;
-  image?: string;
-  featured: boolean;
-  date?: string;
-  content?: string;
-  slug: string;
-}
+import type { Project } from "@/utils/projects";
 
 export default function ProjectCard({ project }: { project: Project }) {
   const formatDate = (dateString: string) => {

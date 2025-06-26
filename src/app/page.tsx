@@ -103,7 +103,7 @@ export default async function Home() {
               href="/projects"
               className="inline-flex items-center px-6 py-3 bg-terminal-selection/30 text-terminal-text border border-terminal-selection rounded-lg hover:bg-terminal-selection transition-all duration-300 font-mono"
             >
-              ➜ explore all projets
+              ➜ explore all projects
             </Link>
           </div>
         </section>

@@ -119,7 +119,7 @@ describe("Home Page", () => {
     expect(projectLinks[0]).toHaveAttribute("href", "https://example.com");
     expect(projectLinks[1]).toHaveAttribute("href", "https://example.com");
 
-    const exploreAllLink = screen.getByText("➜ explore all projets");
+    const exploreAllLink = screen.getByText("➜ explore all projects");
     expect(exploreAllLink).toHaveAttribute("href", "/projects");
     expect(exploreAllLink).toHaveClass(
       "bg-terminal-selection/30",

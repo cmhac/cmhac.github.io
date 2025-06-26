@@ -72,7 +72,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           rel="noopener noreferrer"
           className="inline-flex items-center text-terminal-green hover:text-terminal-cyan transition-colors font-mono"
         >
-          $ explore_project<span className="terminal-text ml-1"></span>
+          $ explore_project
         </Link>
       </div>
     </div>

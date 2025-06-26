@@ -82,4 +82,32 @@ describe("Navigation", () => {
     expect(screen.getByRole("button")).toBeInTheDocument();
     expect(screen.getByText("Open main menu")).toBeInTheDocument();
   });
+
+  it("has correct layout structure", () => {
+    (usePathname as jest.Mock).mockReturnValue("/");
+    render(<Navigation />);
+
+    // Check main navigation container
+    const nav = screen.getByRole("navigation");
+    expect(nav).toHaveClass("fixed", "w-full");
+
+    // Check logo container
+    const logo = screen.getByText("chris_hacker").parentElement;
+    expect(logo).toHaveClass("flex", "items-center");
+
+    // Check navigation links container
+    const desktopNav = screen.getAllByText("~/home")[0].closest("div.hidden");
+    expect(desktopNav).toHaveClass(
+      "hidden",
+      "sm:flex",
+      "sm:items-center",
+      "sm:space-x-8",
+    );
+
+    // Verify the flex layout
+    const mainFlexContainer = screen
+      .getByText("chris_hacker")
+      .closest("div.flex");
+    expect(mainFlexContainer).toHaveClass("flex", "justify-between", "h-16");
+  });
 });

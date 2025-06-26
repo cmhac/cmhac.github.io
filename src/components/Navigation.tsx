@@ -25,55 +25,56 @@ export default function Navigation() {
     <nav className="bg-terminal/50 backdrop-blur-sm fixed w-full z-50 border-b border-terminal-selection">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            {/* Logo/Home link */}
-            <Link href="/" className="text-xl font-mono font-bold group">
-              <span className="text-terminal-purple hover:text-terminal-cyan transition-colors">
-                chris_hacker
-              </span>
-              {getPathDisplay() && (
-                <>
-                  <span className="text-terminal-text">/</span>
-                  <span className="text-terminal-green transition-colors group-hover:text-terminal-text/50">
-                    {getPathDisplay()}
-                  </span>
-                </>
-              )}
-            </Link>
+          {/* Logo/Home link */}
+          <Link
+            href="/"
+            className="flex items-center text-xl font-mono font-bold group"
+          >
+            <span className="text-terminal-purple hover:text-terminal-cyan transition-colors">
+              chris_hacker
+            </span>
+            {getPathDisplay() && (
+              <>
+                <span className="text-terminal-text">/</span>
+                <span className="text-terminal-green transition-colors group-hover:text-terminal-text/50">
+                  {getPathDisplay()}
+                </span>
+              </>
+            )}
+          </Link>
 
-            {/* Navigation Links */}
-            <div className="hidden sm:ml-10 sm:flex sm:space-x-8">
-              <Link
-                href="/"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
-                  isActive("/")
-                    ? "text-terminal-cyan"
-                    : "text-terminal-text hover:text-terminal-purple"
-                }`}
-              >
-                ~/home
-              </Link>
-              <Link
-                href="/projects"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
-                  isActive("/projects")
-                    ? "text-terminal-cyan"
-                    : "text-terminal-text hover:text-terminal-purple"
-                }`}
-              >
-                ~/projects
-              </Link>
-              <Link
-                href="/about"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
-                  isActive("/about")
-                    ? "text-terminal-cyan"
-                    : "text-terminal-text hover:text-terminal-purple"
-                }`}
-              >
-                ~/about
-              </Link>
-            </div>
+          {/* Navigation Links - Now a separate flex container */}
+          <div className="hidden sm:flex sm:items-center sm:space-x-8">
+            <Link
+              href="/"
+              className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
+                isActive("/")
+                  ? "text-terminal-cyan"
+                  : "text-terminal-text hover:text-terminal-purple"
+              }`}
+            >
+              ~/home
+            </Link>
+            <Link
+              href="/projects"
+              className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
+                isActive("/projects")
+                  ? "text-terminal-cyan"
+                  : "text-terminal-text hover:text-terminal-purple"
+              }`}
+            >
+              ~/projects
+            </Link>
+            <Link
+              href="/about"
+              className={`inline-flex items-center px-1 pt-1 text-sm font-medium link-underline ${
+                isActive("/about")
+                  ? "text-terminal-cyan"
+                  : "text-terminal-text hover:text-terminal-purple"
+              }`}
+            >
+              ~/about
+            </Link>
           </div>
 
           {/* Mobile menu button */}

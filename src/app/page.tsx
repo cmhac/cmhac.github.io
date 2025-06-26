@@ -3,7 +3,7 @@ import path from "path";
 import Link from "next/link";
 import { getAllProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
-import ProjectImage from "@/components/ProjectImage";
+import ProjectCard from "@/components/ProjectCard";
 
 // Types for our CMS content
 interface SiteSettings {
@@ -35,48 +35,6 @@ async function getSiteSettings(): Promise<SiteSettings> {
       },
     };
   }
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  return (
-    <div className="bg-terminal-selection/30 backdrop-blur-sm rounded-lg p-6 card-hover border border-terminal-selection/50">
-      {project.image && (
-        <div className="relative w-full h-48 mb-4 overflow-hidden rounded-lg">
-          <ProjectImage
-            src={project.image}
-            alt={project.title}
-            className="transition-transform duration-500 hover:scale-110"
-          />
-        </div>
-      )}
-      <h3 className="text-xl font-mono font-bold mb-2 text-terminal-purple">
-        {project.title}
-      </h3>
-      <p className="text-terminal-text/80 mb-4 font-light">
-        {project.description}
-      </p>
-      {project.technologies && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.technologies.map((tech) => (
-            <span
-              key={tech}
-              className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      )}
-      <Link
-        href={project.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center text-terminal-green hover:text-terminal-cyan transition-colors font-mono"
-      >
-        $ explore_project<span className="terminal-text ml-1"></span>
-      </Link>
-    </div>
-  );
 }
 
 export default async function Home() {

@@ -53,10 +53,17 @@ jest.mock("fs/promises", () => ({
   ),
 }));
 
-// Mock the ProjectImage component
-jest.mock("@/components/ProjectImage", () => {
-  return function MockProjectImage({ src, alt }: { src: string; alt: string }) {
-    return src ? <img src={src} alt={alt} /> : null;
+// Mock the ProjectCard component
+jest.mock("@/components/ProjectCard", () => {
+  return function MockProjectCard({ project }: { project: any }) {
+    return (
+      <div data-testid="project-card">
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        {project.image && <img src={project.image} alt={project.title} />}
+        <a href={project.url}>$ explore_project</a>
+      </div>
+    );
   };
 });
 
@@ -78,7 +85,15 @@ describe("Home Page", () => {
     render(await Home());
     expect(screen.getByText("$")).toBeInTheDocument();
     expect(screen.getByText("featured_projects")).toBeInTheDocument();
+
+    // Check that only featured projects are rendered
+    const projectCards = screen.getAllByTestId("project-card");
+    expect(projectCards).toHaveLength(2); // Only featured projects
     expect(screen.getByText("Featured Project")).toBeInTheDocument();
+    expect(
+      screen.getByText("Featured Project Without Image"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Regular Project")).not.toBeInTheDocument();
   });
 
   it("renders navigation buttons", async () => {

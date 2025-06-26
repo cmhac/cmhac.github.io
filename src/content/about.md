@@ -1,6 +1,7 @@
 ---
 title: About Me
 description: Learn more about my background in investigative data journalism and engineering
+image: /media/headshot.webp
 ---
 
 I'm an investigative data journalist and software engineer specializing in uncovering stories through data analysis and custom software development. With a unique blend of journalistic instinct and technical expertise, I build tools that help reveal hidden patterns and untold stories in complex datasets.

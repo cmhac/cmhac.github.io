@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getAllProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
 import ProjectCard from "@/components/ProjectCard";
+import Image from "next/image";
 
 // Types for our CMS content
 interface SiteSettings {
@@ -46,13 +47,25 @@ export default async function Home() {
     <div className="min-h-screen pt-16">
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16 animate-text-reveal">
-          <h1 className="text-5xl font-bold mb-6 font-mono">
-            <span className="text-terminal-cyan">{siteSettings.author}</span>
-            <span className="text-terminal-text"> | </span>
-            <span className="text-terminal-text">
-              {siteSettings.description}
-            </span>
-          </h1>
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative w-32 h-32 mb-6 overflow-hidden rounded-full border-2 border-terminal-selection/50 bg-terminal-selection/30">
+              <Image
+                src="/media/headshot.webp"
+                alt="Chris Hacker"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 128px, 128px"
+                priority
+              />
+            </div>
+            <h1 className="text-5xl font-bold mb-6 font-mono">
+              <span className="text-terminal-cyan">{siteSettings.author}</span>
+              <span className="text-terminal-text"> | </span>
+              <span className="text-terminal-text">
+                {siteSettings.description}
+              </span>
+            </h1>
+          </div>
           <p className="text-xl text-terminal-text/80 max-w-3xl mx-auto leading-relaxed">
             I build tools and analyze data to uncover stories that matter.
             Specializing in investigative data journalism and custom software

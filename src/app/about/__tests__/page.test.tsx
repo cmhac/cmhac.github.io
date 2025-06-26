@@ -24,6 +24,17 @@ describe("About Page", () => {
     const command = screen.getByText("about");
     expect(command).toHaveClass("text-terminal-purple");
 
+    // Check headshot image
+    const headshot = screen.getByRole("img", { name: "Chris Hacker" });
+    expect(headshot).toBeInTheDocument();
+    expect(headshot.closest("div")).toHaveClass(
+      "relative",
+      "w-full",
+      "aspect-square",
+      "overflow-hidden",
+      "rounded-lg",
+    );
+
     // Check content
     const paragraphs = screen.getAllByText(/./);
     paragraphs.forEach((paragraph) => {

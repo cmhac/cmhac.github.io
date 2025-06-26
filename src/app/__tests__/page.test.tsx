@@ -53,6 +53,17 @@ describe("Home Page", () => {
   it("renders hero section with title and description", async () => {
     render(await Home());
 
+    // Check headshot image
+    const headshot = screen.getByRole("img", { name: "Chris Hacker" });
+    expect(headshot).toBeInTheDocument();
+    expect(headshot.closest("div")).toHaveClass(
+      "relative",
+      "w-32",
+      "h-32",
+      "overflow-hidden",
+      "rounded-full",
+    );
+
     const title = screen.getByText("Chris Hacker");
     expect(title).toBeInTheDocument();
     expect(title).toHaveClass("text-terminal-cyan");

@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
+import Image from "next/image";
 
 interface AboutContent {
   title: string;
@@ -33,15 +34,29 @@ export default async function AboutPage() {
             <span className="text-terminal-purple ml-2">about</span>
             <span className="text-terminal-text terminal-text ml-2"></span>
           </h1>
-          <div className="prose prose-invert max-w-none">
-            {content.split("\n\n").map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-terminal-text/80 text-lg leading-relaxed mb-6"
-              >
-                {paragraph}
-              </p>
-            ))}
+          <div className="flex flex-col md:flex-row gap-8 mb-8">
+            <div className="md:w-1/3">
+              <div className="relative w-full aspect-square overflow-hidden rounded-lg border-2 border-terminal-selection/50 bg-terminal-selection/30">
+                <Image
+                  src="/media/headshot.webp"
+                  alt="Chris Hacker"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  priority
+                />
+              </div>
+            </div>
+            <div className="prose prose-invert max-w-none md:w-2/3">
+              {content.split("\n\n").map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-terminal-text/80 text-lg leading-relaxed mb-6"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
           <div className="mt-12 flex gap-4">
             <Link

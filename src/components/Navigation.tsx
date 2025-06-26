@@ -27,15 +27,14 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             {/* Logo/Home link */}
-            <Link
-              href="/"
-              className="text-xl font-mono font-bold text-terminal-purple hover:text-terminal-cyan transition-colors"
-            >
-              chris_hacker
+            <Link href="/" className="text-xl font-mono font-bold group">
+              <span className="text-terminal-purple hover:text-terminal-cyan transition-colors">
+                chris_hacker
+              </span>
               {getPathDisplay() && (
                 <>
                   <span className="text-terminal-text">/</span>
-                  <span className="text-terminal-green">
+                  <span className="text-terminal-green transition-colors group-hover:text-terminal-text/50">
                     {getPathDisplay()}
                   </span>
                 </>

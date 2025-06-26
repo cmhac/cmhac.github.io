@@ -27,7 +27,12 @@ describe("Navigation", () => {
     render(<Navigation />);
 
     expect(screen.getByText("chris_hacker")).toBeInTheDocument();
-    expect(screen.getByText("projects")).toBeInTheDocument();
+    const projectsText = screen.getByText("projects");
+    expect(projectsText).toBeInTheDocument();
+    expect(projectsText).toHaveClass(
+      "text-terminal-green",
+      "group-hover:text-terminal-text/50",
+    );
     expect(screen.queryByText("data")).not.toBeInTheDocument();
     expect(screen.queryByText("about")).not.toBeInTheDocument();
   });
@@ -37,9 +42,26 @@ describe("Navigation", () => {
     render(<Navigation />);
 
     expect(screen.getByText("chris_hacker")).toBeInTheDocument();
-    expect(screen.getByText("about")).toBeInTheDocument();
+    const aboutText = screen.getByText("about");
+    expect(aboutText).toBeInTheDocument();
+    expect(aboutText).toHaveClass(
+      "text-terminal-green",
+      "group-hover:text-terminal-text/50",
+    );
     expect(screen.queryByText("data")).not.toBeInTheDocument();
     expect(screen.queryByText("projects")).not.toBeInTheDocument();
+  });
+
+  it("applies hover effect classes to logo", () => {
+    (usePathname as jest.Mock).mockReturnValue("/projects");
+    render(<Navigation />);
+
+    const logoText = screen.getByText("chris_hacker");
+    expect(logoText).toHaveClass(
+      "text-terminal-purple",
+      "hover:text-terminal-cyan",
+    );
+    expect(logoText.parentElement).toHaveClass("group");
   });
 
   it("highlights active navigation link", () => {

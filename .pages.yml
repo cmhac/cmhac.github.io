@@ -1,48 +1,35 @@
-content:
-  - name: projects
-    label: Projects
-    path: src/content/projects
-    filename: "{fields.title}.md"
-    type: collection
-    fields:
-      - name: title
-        label: Title
-        type: string
-      - name: description
-        label: Description
-        type: text
-      - name: technologies
-        label: Technologies Used
-        type: list
-      - name: url
-        label: Project URL
-        type: string
-      - name: image
-        label: Project Image
-        type: image
-      - name: featured
-        label: Featured Project
-        type: boolean
-      - name: body
-        label: Details
-        type: rich-text
+media:
+  - name: images
+    label: Images
+    input: public/media
+    output: /media
+    categories: [image]
+    extensions: [jpg, jpeg, png, webp]
 
-  - name: site-settings
+content:
+  - name: site
     label: Site Settings
     path: src/config/site.json
     type: file
     fields:
       - name: title
-        label: Website title
+        label: Site Title
         type: string
+        required: true
       - name: description
-        label: Website description
-        type: text
+        label: Site Description
+        type: string
+        required: true
       - name: author
         label: Author Name
         type: string
+        required: true
+      - name: homeHeadshot
+        label: Homepage Profile Image
+        type: image
+        description: The profile image shown on the homepage (128x128px circular)
       - name: socialLinks
-        label: Social Links
+        label: Social Media Links
         type: object
         fields:
           - name: github
@@ -63,16 +50,49 @@ content:
       - name: title
         label: Page Title
         type: string
-      - name: subtitle
-        label: Subtitle
+        required: true
+      - name: description
+        label: Page Description
         type: string
+        required: true
       - name: image
-        label: Profile Image
+        label: About Page Image
         type: image
+        description: The profile image shown on the about page
       - name: body
-        label: About Content
+        label: Content
         type: rich-text
 
-media:
-  input: public/media
-  output: /media
+  - name: projects
+    label: Projects
+    path: src/content/projects
+    type: collection
+    fields:
+      - name: title
+        label: Project Title
+        type: string
+        required: true
+      - name: description
+        label: Project Description
+        type: string
+        required: true
+      - name: technologies
+        label: Technologies Used
+        type: string
+        list: true
+      - name: url
+        label: Project URL
+        type: string
+      - name: image
+        label: Project Image
+        type: image
+      - name: featured
+        label: Featured Project
+        type: boolean
+        default: false
+      - name: date
+        label: Project Date
+        type: date
+      - name: body
+        label: Content
+        type: rich-text

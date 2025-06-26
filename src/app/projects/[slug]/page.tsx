@@ -102,11 +102,25 @@ export default async function ProjectPage({ params }: Props) {
             {project.image && (
               <div className="mb-8">
                 <div className="relative w-full h-[400px] overflow-hidden rounded-lg">
-                  <ProjectImage
-                    src={project.image}
-                    alt={project.title}
-                    className="object-cover"
-                  />
+                  {project.url ? (
+                    <Link
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ProjectImage
+                        src={project.image}
+                        alt={project.title}
+                        className="object-cover hover:scale-105 transition-transform duration-500"
+                      />
+                    </Link>
+                  ) : (
+                    <ProjectImage
+                      src={project.image}
+                      alt={project.title}
+                      className="object-cover"
+                    />
+                  )}
                 </div>
               </div>
             )}

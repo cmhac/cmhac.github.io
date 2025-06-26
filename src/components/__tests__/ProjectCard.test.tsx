@@ -73,12 +73,6 @@ describe("ProjectCard", () => {
       `/projects/${projectWithSlug.slug}`,
     );
     expect(exploreLink).toHaveClass("text-terminal-green", "font-mono");
-
-    const liveLink = screen.getByText("➜ view live");
-    expect(liveLink).toHaveAttribute("href", projectWithSlug.url);
-    expect(liveLink).toHaveAttribute("target", "_blank");
-    expect(liveLink).toHaveAttribute("rel", "noopener noreferrer");
-    expect(liveLink).toHaveClass("text-terminal-purple", "font-mono");
   });
 
   it("renders project content with terminal styling", () => {

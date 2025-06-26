@@ -13,6 +13,7 @@ export const mockProject = {
   featured: true,
   date: "2024-03-14",
   content: "This is the project content.",
+  slug: "test-project",
 };
 
 export const mockProjects = [

@@ -83,16 +83,6 @@ export default function ProjectCard({ project }: { project: Project }) {
             >
               ➜ explore project
             </Link>
-            {project.url && (
-              <Link
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-terminal-purple hover:text-terminal-cyan transition-colors font-mono"
-              >
-                ➜ view live
-              </Link>
-            )}
           </div>
         </div>
       </div>

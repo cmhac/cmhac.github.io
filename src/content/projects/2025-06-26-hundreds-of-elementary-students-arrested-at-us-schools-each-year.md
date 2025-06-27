@@ -11,7 +11,8 @@ image: /media/Screenshot 2025-06-26 at 5.13.04 PM.png
 featured: false
 date: 2022-12-09
 ---
-Drawing on the U.S. Department of Education’s 2017-18 Civil Rights Data Collection, I isolated every elementary school that reported at least one “school-related arrest,” then spent weeks confirming each figure with districts and state education officials, pruning out erroneous, records.
+
+Drawing on the U.S. Department of Education’s 2017-18 Civil Rights Data Collection, I isolated every elementary school that reported at least one “school-related arrest,” then spent weeks confirming each figure with districts and state education officials, pruning out erroneous records.
 
 With a cleaned, open-sourced dataset and reproducible code on GitHub, I calculated arrest totals and rates, broke them down by race and disability status, and mapped where the youngest children were most likely to be handcuffed.
 

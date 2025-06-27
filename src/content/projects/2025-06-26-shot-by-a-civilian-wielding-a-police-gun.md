@@ -13,7 +13,8 @@ image: /media/Screenshot 2025-06-26 at 3.34.08 PM.png
 featured: true
 date: 2024-05-16
 ---
-I led a team of journalists from CBS News, The Trace, and Reveal from the Center for Investigative Reporting to report this this two-year investigation into the sale of used police duty weapons to members of the public.
+
+I led a team of journalists from CBS News, The Trace, and Reveal from the Center for Investigative Reporting to report this two-year investigation into the sale of used police duty weapons to members of the public.
 
 I built a system to automate hundreds of public records requests to law enforcement agencies across the country, seeking contracts and receipts related to departmental weapon sales. The system automatically reviewed requests to a shared inbox and used a combination of traditional methods and large language models to summarize tagged messages, helping reduce the typically-heavy workload of a mass-FOIA campaign.
 

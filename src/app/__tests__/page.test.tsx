@@ -2,21 +2,24 @@ import { render, screen } from "@testing-library/react";
 import Home from "../page";
 import { mockProject } from "./test-utils";
 
-// Mock getAllProjects
+// Mock getHomePageProjects
 jest.mock("@/utils/projects", () => ({
-  getAllProjects: jest.fn(() => [
-    {
-      ...mockProject,
-      title: "Featured Project",
-      description: "A featured project description",
-    },
-    {
-      ...mockProject,
-      title: "Featured Project Without Image",
-      description: "A featured project without an image",
-      image: undefined,
-    },
-  ]),
+  getHomePageProjects: jest.fn(() => ({
+    featured: [
+      {
+        ...mockProject,
+        title: "Featured Project",
+        description: "A featured project description",
+      },
+      {
+        ...mockProject,
+        title: "Featured Project Without Image",
+        description: "A featured project without an image",
+        image: undefined,
+      },
+    ],
+    recent: [],
+  })),
 }));
 
 // Mock fs for site settings

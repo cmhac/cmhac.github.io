@@ -16,6 +16,7 @@ const mockProjects: Project[] = [
     url: "https://example.com/1",
     image: "/image1.jpg",
     featured: true,
+    featureRank: 1,
     date: "2024-03-15T00:00:00.000Z",
     content: "# Featured Project 1\n\nContent here",
     slug: "featured-project-1",
@@ -63,6 +64,7 @@ technologies: ${JSON.stringify(project.technologies)}
 url: ${project.url}
 image: ${project.image}
 featured: ${project.featured}
+${project.featureRank !== undefined ? `featureRank: ${project.featureRank}` : ""}
 date: ${project.date}
 ---
 
@@ -189,6 +191,116 @@ Content here`);
 
       const { recent } = await getHomePageProjects();
       expect(recent).toHaveLength(3);
+    });
+
+    it("sorts featured projects by featureRank", async () => {
+      // Create mock projects with different feature ranks
+      const featuredProjects: Project[] = [
+        {
+          title: "Featured Project A",
+          description: "Featured project with rank 3",
+          technologies: ["React"],
+          featured: true,
+          featureRank: 3,
+          date: "2024-03-15T00:00:00.000Z",
+          content: "Content A",
+          slug: "featured-project-a",
+        },
+        {
+          title: "Featured Project B",
+          description: "Featured project with rank 1",
+          technologies: ["Vue"],
+          featured: true,
+          featureRank: 1,
+          date: "2024-03-16T00:00:00.000Z",
+          content: "Content B",
+          slug: "featured-project-b",
+        },
+        {
+          title: "Featured Project C",
+          description: "Featured project with rank 2",
+          technologies: ["Angular"],
+          featured: true,
+          featureRank: 2,
+          date: "2024-03-17T00:00:00.000Z",
+          content: "Content C",
+          slug: "featured-project-c",
+        },
+      ];
+
+      mockReaddir.mockResolvedValueOnce(
+        featuredProjects.map((p) => `${p.slug}.md`) as any,
+      );
+
+      mockReadFile.mockImplementation(async (filePath) => {
+        const fileName = path.basename(filePath as string);
+        const slug = fileName.replace(".md", "");
+        const project = featuredProjects.find((p) => p.slug === slug);
+        if (!project) throw new Error("File not found");
+        return generateMockFileContent(project);
+      });
+
+      const { featured } = await getHomePageProjects();
+
+      expect(featured).toHaveLength(3);
+      expect(featured[0].title).toBe("Featured Project B"); // rank 1
+      expect(featured[1].title).toBe("Featured Project C"); // rank 2
+      expect(featured[2].title).toBe("Featured Project A"); // rank 3
+    });
+
+    it("handles featured projects with and without featureRank", async () => {
+      // Mix of projects with and without feature ranks
+      const mixedProjects: Project[] = [
+        {
+          title: "Ranked Project",
+          description: "Has feature rank",
+          technologies: ["React"],
+          featured: true,
+          featureRank: 1,
+          date: "2024-03-10T00:00:00.000Z",
+          content: "Ranked content",
+          slug: "ranked-project",
+        },
+        {
+          title: "Unranked Project New",
+          description: "No feature rank, newer",
+          technologies: ["Vue"],
+          featured: true,
+          featureRank: undefined,
+          date: "2024-03-15T00:00:00.000Z",
+          content: "Unranked new content",
+          slug: "unranked-project-new",
+        },
+        {
+          title: "Unranked Project Old",
+          description: "No feature rank, older",
+          technologies: ["Angular"],
+          featured: true,
+          featureRank: undefined,
+          date: "2024-03-12T00:00:00.000Z",
+          content: "Unranked old content",
+          slug: "unranked-project-old",
+        },
+      ];
+
+      mockReaddir.mockResolvedValueOnce(
+        mixedProjects.map((p) => `${p.slug}.md`) as any,
+      );
+
+      mockReadFile.mockImplementation(async (filePath) => {
+        const fileName = path.basename(filePath as string);
+        const slug = fileName.replace(".md", "");
+        const project = mixedProjects.find((p) => p.slug === slug);
+        if (!project) throw new Error("File not found");
+        return generateMockFileContent(project);
+      });
+
+      const { featured } = await getHomePageProjects();
+
+      expect(featured).toHaveLength(3);
+      expect(featured[0].title).toBe("Ranked Project"); // Has rank, comes first
+      expect(featured[1].title).toBe("Unranked Project New"); // No rank, sorted by date (newer)
+      expect(featured[2].title).toBe("Unranked Project Old"); // No rank, sorted by date (older)
     });
   });
 });

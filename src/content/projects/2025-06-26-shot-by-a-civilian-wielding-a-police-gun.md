@@ -11,6 +11,7 @@ technologies:
 url: https://www.cbsnews.com/police-selling-guns/
 image: /media/Screenshot 2025-06-26 at 3.34.08 PM.png
 featured: true
+featureRank: 1
 date: 2024-05-16
 ---
 

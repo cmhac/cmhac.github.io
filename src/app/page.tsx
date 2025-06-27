@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import Link from "next/link";
-import { getAllProjects } from "@/utils/projects";
+import { getHomePageProjects } from "@/utils/projects";
 import type { Project } from "@/utils/projects";
 import ProjectCard from "@/components/ProjectCard";
 import Image from "next/image";
@@ -40,8 +40,7 @@ async function getSiteSettings(): Promise<SiteSettings> {
 }
 
 export default async function Home() {
-  const projects = await getAllProjects();
-  const featuredProjects = projects.filter((project) => project.featured);
+  const { featured: featuredProjects } = await getHomePageProjects();
   const siteSettings = await getSiteSettings();
 
   return (

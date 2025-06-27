@@ -9,6 +9,7 @@ export interface Project {
   url?: string;
   image?: string;
   featured: boolean;
+  featureRank?: number;
   date?: string;
   content?: string;
   slug: string;
@@ -41,6 +42,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         url: data.url || "",
         image: data.image || "",
         featured: data.featured || false,
+        featureRank: data.featureRank || null,
         date: data.date || new Date().toISOString(),
         content: markdownContent,
         slug: projectSlug,
@@ -73,6 +75,7 @@ export async function getAllProjects(): Promise<Project[]> {
             url: data.url || "",
             image: data.image || "",
             featured: data.featured || false,
+            featureRank: data.featureRank || null,
             date: data.date || new Date().toISOString(),
             content: markdownContent,
             slug: generateSlug(data.title),
@@ -91,7 +94,25 @@ export async function getAllProjects(): Promise<Project[]> {
 
 export async function getHomePageProjects() {
   const projects = await getAllProjects();
-  const featured = projects.filter((project) => project.featured);
+  const featured = projects
+    .filter((project) => project.featured)
+    .sort((a, b) => {
+      // Sort by featureRank (ascending), then by date (descending) for projects without rank
+      const aRank = a.featureRank ?? null;
+      const bRank = b.featureRank ?? null;
+
+      if (aRank !== null && bRank !== null) {
+        return aRank - bRank;
+      }
+      if (aRank !== null && bRank === null) {
+        return -1; // a comes first (has rank)
+      }
+      if (aRank === null && bRank !== null) {
+        return 1; // b comes first (has rank)
+      }
+      // Both have no rank, sort by date
+      return new Date(b.date!).getTime() - new Date(a.date!).getTime();
+    });
   const recent = projects.filter((project) => !project.featured).slice(0, 3);
 
   return { featured, recent };

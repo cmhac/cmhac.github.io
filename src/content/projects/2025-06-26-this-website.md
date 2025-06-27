@@ -12,6 +12,8 @@ technologies:
 url: https://github.com/cmhac/portfolio-site
 image: /media/Screenshot 2025-06-26 at 12.23.47 PM.png
 featured: true
+featureRank: 3
 date: 2025-06-26
 ---
+
 I built this website from scratch using open-source tools. You can learn more and check out the source code [on GitHub](https://github.com/cmhac/portfolio-site).

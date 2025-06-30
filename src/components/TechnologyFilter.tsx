@@ -15,6 +15,14 @@ export default function TechnologyFilter({
   selectedTechnology,
   onTechnologySelect,
 }: TechnologyFilterProps) {
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedTechnologies =
+    showAll || technologies.length <= 10
+      ? technologies
+      : technologies.slice(0, 10);
+
+  const shouldShowToggle = technologies.length > 10;
   return (
     <div className="mb-8">
       <h2 className="text-sm font-mono text-terminal-comment mb-3">
@@ -31,7 +39,7 @@ export default function TechnologyFilter({
         >
           all
         </button>
-        {technologies.map((tech) => (
+        {displayedTechnologies.map((tech) => (
           <button
             key={tech}
             onClick={() => onTechnologySelect(tech)}
@@ -44,6 +52,14 @@ export default function TechnologyFilter({
             {tech} ({technologyCounts[tech]})
           </button>
         ))}
+        {shouldShowToggle && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="px-3 py-1 rounded-full text-sm font-mono transition-colors bg-terminal-selection/30 text-terminal-comment hover:bg-terminal-selection/50 hover:text-terminal-text border border-terminal-selection/50"
+          >
+            {showAll ? "show less" : "show more"}
+          </button>
+        )}
       </div>
     </div>
   );

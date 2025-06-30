@@ -41,6 +41,29 @@ describe("Projects Page", () => {
     expect(prompt).toHaveClass("text-terminal-green");
   });
 
+  it("renders search box with correct placeholder and styling", async () => {
+    render(await ProjectsPage());
+
+    const searchInput = screen.getByPlaceholderText("search projects...");
+    expect(searchInput).toBeInTheDocument();
+    expect(searchInput).toHaveClass(
+      "w-full",
+      "px-3",
+      "py-2",
+      "bg-terminal-selection/30",
+      "border",
+      "border-terminal-selection",
+      "rounded-lg",
+      "text-terminal-text",
+      "font-mono",
+      "text-sm",
+      "focus:outline-none",
+      "focus:border-terminal-purple",
+      "focus:bg-terminal-selection/50",
+      "transition-colors",
+    );
+  });
+
   it("renders all projects in a vertical stack", async () => {
     render(await ProjectsPage());
 

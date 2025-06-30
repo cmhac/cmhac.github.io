@@ -4,8 +4,8 @@ description: I analyzed federal data to show that majority-Black districts
   receive half the per-pupil building investment and only a fraction of state
   capital funding compared with mostly White districts
 technologies:
-  - Python
-  - ETL
+  Python: "Data analysis and financial data processing"
+  ETL: "Extract, Transform, Load processes for education finance data"
 url: https://www.cbsnews.com/news/black-school-districts-funding-state-budgets-students-impact/
 image: /media/Screenshot 2025-06-26 at 5.07.26 PM.png
 featured: false

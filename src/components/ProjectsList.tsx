@@ -19,7 +19,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
     // Count frequency of each technology
     const techCount = new Map<string, number>();
     projects.forEach((project) => {
-      project.technologies.forEach((tech) => {
+      Object.keys(project.technologies).forEach((tech) => {
         techCount.set(tech, (techCount.get(tech) || 0) + 1);
       });
     });
@@ -53,7 +53,7 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
         const searchableContent = [
           project.title,
           project.description,
-          ...project.technologies,
+          ...Object.keys(project.technologies),
         ]
           .join(" ")
           .toLowerCase();
@@ -63,8 +63,8 @@ export default function ProjectsList({ projects }: ProjectsListProps) {
 
     // Apply technology filter
     if (selectedTechnology) {
-      filtered = filtered.filter((project) =>
-        project.technologies.includes(selectedTechnology),
+      filtered = filtered.filter(
+        (project) => selectedTechnology in project.technologies,
       );
     }
 

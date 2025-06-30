@@ -4,10 +4,10 @@ description: I decoded and analyzed FBI homicide data to reveal that nearly half
   of U.S. murders go unsolved and that clearance rates are even worse for Black
   and Hispanic victims.
 technologies:
-  - Python
-  - ETL
-  - Django
-  - FOIA
+  Python: "Data analysis and parsing programming language"
+  ETL: "Extract, Transform, Load processes for data pipeline"
+  Django: "Web framework for building data applications"
+  FOIA: "Freedom of Information Act requests for government data"
 url: https://www.cbsnews.com/news/unsolved-murders-crime-without-punishment/
 image: /media/Screenshot 2025-06-26 at 5.19.26 PM.png
 featured: false

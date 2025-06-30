@@ -1,9 +1,59 @@
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ProjectsList from "../ProjectsList";
-import { mockProjects } from "@/app/__tests__/test-utils";
+import { Project } from "@/utils/projects";
 
 describe("ProjectsList", () => {
+  const mockProjects: Project[] = [
+    {
+      title: "Project 1",
+      description: "Description 1",
+      technologies: {
+        React: "Frontend framework",
+        TypeScript: "Type safety",
+      },
+      url: "https://example.com/1",
+      image: "/image1.jpg",
+      featured: true,
+      date: "2024-01-01",
+      content: "Content 1",
+      slug: "project-1",
+    },
+    {
+      title: "Project 2",
+      description: "Description 2",
+      technologies: {
+        Vue: "Frontend framework",
+        JavaScript: "Programming language",
+      },
+      url: "https://example.com/2",
+      image: "/image2.jpg",
+      featured: false,
+      date: "2024-01-02",
+      content: "Content 2",
+      slug: "project-2",
+    },
+    {
+      title: "Project 3",
+      description: "Description 3",
+      technologies: {
+        Angular: "Frontend framework",
+        TypeScript: "Type safety",
+      },
+      url: "https://example.com/3",
+      image: "/image3.jpg",
+      featured: false,
+      date: "2024-01-03",
+      content: "Content 3",
+      slug: "project-3",
+    },
+  ];
+
+  beforeEach(() => {
+    // Reset any state between tests
+    jest.clearAllMocks();
+  });
+
   it("renders all projects initially", () => {
     render(<ProjectsList projects={mockProjects} />);
 
@@ -12,101 +62,76 @@ describe("ProjectsList", () => {
     });
   });
 
-  it("filters projects by technology", () => {
-    render(<ProjectsList projects={mockProjects} />);
-
-    // Click on a technology filter
-    const filterButtons = screen.getAllByRole("button");
-    const reactButton = filterButtons.find((button) =>
-      button.textContent?.includes("React"),
-    );
-    if (!reactButton) throw new Error("React button not found");
-    fireEvent.click(reactButton);
-
-    // Should only show projects with React
-    mockProjects.forEach((project) => {
-      if (project.technologies.includes("React")) {
-        expect(screen.getByText(project.title)).toBeInTheDocument();
-      } else {
-        expect(screen.queryByText(project.title)).not.toBeInTheDocument();
-      }
-    });
-  });
-
-  it("shows all projects when 'all' is clicked", () => {
-    render(<ProjectsList projects={mockProjects} />);
-
-    // First filter by technology
-    const filterButtons = screen.getAllByRole("button");
-    const reactButton = filterButtons.find((button) =>
-      button.textContent?.includes("React"),
-    );
-    if (!reactButton) throw new Error("React button not found");
-    fireEvent.click(reactButton);
-
-    // Then click 'all'
-    const allButton = filterButtons.find(
-      (button) => button.textContent === "all",
-    );
-    if (!allButton) throw new Error("All button not found");
-    fireEvent.click(allButton);
-
-    // Should show all projects again
-    mockProjects.forEach((project) => {
-      expect(screen.getByText(project.title)).toBeInTheDocument();
-    });
-  });
-
   it("displays unique technologies in filter", () => {
-    const projectsWithDuplicateTech = [
-      ...mockProjects,
-      {
-        ...mockProjects[0],
-        title: "Another React Project",
-      },
-    ];
+    render(<ProjectsList projects={mockProjects} />);
 
-    render(<ProjectsList projects={projectsWithDuplicateTech} />);
-
-    // Each technology should appear only once in the filter
-    const filterButtons = screen.getAllByRole("button");
-    const reactButtons = filterButtons.filter((button) =>
-      button.textContent?.includes("React"),
-    );
-    expect(reactButtons).toHaveLength(1);
+    // Check that the technology filter displays the correct unique technologies
+    expect(screen.getByText("React (1)")).toBeInTheDocument();
+    expect(screen.getByText("TypeScript (2)")).toBeInTheDocument();
+    expect(screen.getByText("Vue (1)")).toBeInTheDocument();
+    expect(screen.getByText("Angular (1)")).toBeInTheDocument();
+    expect(screen.getByText("JavaScript (1)")).toBeInTheDocument();
   });
 
   it("sorts technologies by frequency then alphabetically", () => {
-    const projectsWithVaryingTechFrequency = [
+    const projectsWithVaryingTechFrequency: Project[] = [
       {
-        ...mockProjects[0],
         title: "Project 1",
-        technologies: ["React", "TypeScript", "Node.js"],
+        description: "Description 1",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+          "Node.js": "Backend runtime",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "project-1",
       },
       {
-        ...mockProjects[0],
         title: "Project 2",
-        technologies: ["React", "TypeScript", "Angular"],
+        description: "Description 2",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+          Angular: "Frontend framework",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "project-2",
       },
       {
-        ...mockProjects[0],
         title: "Project 3",
-        technologies: ["React", "Vue", "Angular"],
+        description: "Description 3",
+        technologies: {
+          React: "Frontend framework",
+          Vue: "Frontend framework",
+          Angular: "Frontend framework",
+        },
+        url: "https://example.com/3",
+        image: "/image3.jpg",
+        featured: false,
+        date: "2024-01-03",
+        content: "Content 3",
+        slug: "project-3",
       },
     ];
 
     render(<ProjectsList projects={projectsWithVaryingTechFrequency} />);
 
-    // Get all technology buttons (excluding 'all')
-    const techButtons = screen
-      .getAllByRole("button")
-      .filter((button) => button.textContent !== "all")
-      .map((button) => button.textContent);
+    const techButtons = Array.from(
+      screen
+        .getAllByRole("button")
+        .filter((button) => button.textContent?.includes("("))
+        .map((button) => button.textContent || ""),
+    );
 
-    // Expected order:
-    // React (3 occurrences)
-    // Angular, TypeScript (2 occurrences each, alphabetical)
-    // Node.js, Vue (1 occurrence each, alphabetical)
+    // Expected order: React (3), Angular (2), TypeScript (2), Node.js (1), Vue (1)
     expect(techButtons).toEqual([
       "React (3)",
       "Angular (2)",
@@ -118,24 +143,48 @@ describe("ProjectsList", () => {
 
   it("filters projects by search query in title", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "React Dashboard",
         description: "A dashboard app",
-        technologies: ["React", "TypeScript"],
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "react-dashboard",
       },
       {
-        ...mockProjects[0],
         title: "Vue Components",
         description: "Component library",
-        technologies: ["Vue", "JavaScript"],
+        technologies: {
+          Vue: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "vue-components",
       },
       {
-        ...mockProjects[0],
         title: "Angular Forms",
         description: "Form validation",
-        technologies: ["Angular", "TypeScript"],
+        technologies: {
+          Angular: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/3",
+        image: "/image3.jpg",
+        featured: false,
+        date: "2024-01-03",
+        content: "Content 3",
+        slug: "angular-forms",
       },
     ];
 
@@ -155,24 +204,48 @@ describe("ProjectsList", () => {
 
   it("filters projects by search query in description", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "Project A",
         description: "A React dashboard application",
-        technologies: ["React", "TypeScript"],
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "project-a",
       },
       {
-        ...mockProjects[0],
         title: "Project B",
         description: "Vue component library",
-        technologies: ["Vue", "JavaScript"],
+        technologies: {
+          Vue: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "project-b",
       },
       {
-        ...mockProjects[0],
         title: "Project C",
         description: "Angular form builder",
-        technologies: ["Angular", "TypeScript"],
+        technologies: {
+          Angular: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/3",
+        image: "/image3.jpg",
+        featured: false,
+        date: "2024-01-03",
+        content: "Content 3",
+        slug: "project-c",
       },
     ];
 
@@ -192,21 +265,48 @@ describe("ProjectsList", () => {
 
   it("filters projects by search query in technologies", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "Project A",
-        technologies: ["React", "TypeScript"],
+        description: "Description A",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "project-a",
       },
       {
-        ...mockProjects[0],
         title: "Project B",
-        technologies: ["Vue", "JavaScript"],
+        description: "Description B",
+        technologies: {
+          Vue: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "project-b",
       },
       {
-        ...mockProjects[0],
         title: "Project C",
-        technologies: ["Angular", "TypeScript"],
+        description: "Description C",
+        technologies: {
+          Angular: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/3",
+        image: "/image3.jpg",
+        featured: false,
+        date: "2024-01-03",
+        content: "Content 3",
+        slug: "project-c",
       },
     ];
 
@@ -226,16 +326,34 @@ describe("ProjectsList", () => {
 
   it("shows all projects when search query is cleared", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "React Dashboard",
-        technologies: ["React", "TypeScript"],
+        description: "Description 1",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "react-dashboard",
       },
       {
-        ...mockProjects[0],
         title: "Vue Components",
-        technologies: ["Vue", "JavaScript"],
+        description: "Description 2",
+        technologies: {
+          Vue: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "vue-components",
       },
     ];
 
@@ -262,16 +380,34 @@ describe("ProjectsList", () => {
 
   it("search is case insensitive", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "React Dashboard",
-        technologies: ["React", "TypeScript"],
+        description: "Description 1",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "react-dashboard",
       },
       {
-        ...mockProjects[0],
         title: "Vue Components",
-        technologies: ["Vue", "JavaScript"],
+        description: "Description 2",
+        technologies: {
+          Vue: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "vue-components",
       },
     ];
 
@@ -290,48 +426,145 @@ describe("ProjectsList", () => {
 
   it("combines search and technology filters", async () => {
     const user = userEvent.setup();
-    const searchableProjects = [
+    const searchableProjects: Project[] = [
       {
-        ...mockProjects[0],
         title: "React Dashboard",
-        technologies: ["React", "TypeScript"],
+        description: "Description 1",
+        technologies: {
+          React: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/1",
+        image: "/image1.jpg",
+        featured: true,
+        date: "2024-01-01",
+        content: "Content 1",
+        slug: "react-dashboard",
       },
       {
-        ...mockProjects[0],
         title: "React App",
-        technologies: ["React", "JavaScript"],
+        description: "Description 2",
+        technologies: {
+          React: "Frontend framework",
+          JavaScript: "Programming language",
+        },
+        url: "https://example.com/2",
+        image: "/image2.jpg",
+        featured: false,
+        date: "2024-01-02",
+        content: "Content 2",
+        slug: "react-app",
       },
       {
-        ...mockProjects[0],
         title: "Vue Dashboard",
-        technologies: ["Vue", "TypeScript"],
+        description: "Description 3",
+        technologies: {
+          Vue: "Frontend framework",
+          TypeScript: "Type safety",
+        },
+        url: "https://example.com/3",
+        image: "/image3.jpg",
+        featured: false,
+        date: "2024-01-03",
+        content: "Content 3",
+        slug: "vue-dashboard",
       },
     ];
 
     render(<ProjectsList projects={searchableProjects} />);
 
-    // First apply search filter
-    const searchInput = screen.getByPlaceholderText("search projects...");
+    // First filter by technology
+    const techButtons = screen.getAllByRole("button");
+    const reactButton = techButtons.find((button) =>
+      button.textContent?.includes("React"),
+    );
+    if (!reactButton) throw new Error("React button not found");
 
+    await act(async () => {
+      await user.click(reactButton);
+    });
+
+    // Should show both React projects
+    expect(screen.getByText("React Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("React App")).toBeInTheDocument();
+    expect(screen.queryByText("Vue Dashboard")).not.toBeInTheDocument();
+
+    // Then add search filter
+    const searchInput = screen.getByPlaceholderText("search projects...");
     await act(async () => {
       await user.type(searchInput, "Dashboard");
     });
 
-    // Should show both dashboard projects
+    // Should only show React Dashboard (matches both React tech and Dashboard search)
     expect(screen.getByText("React Dashboard")).toBeInTheDocument();
     expect(screen.queryByText("React App")).not.toBeInTheDocument();
-    expect(screen.getByText("Vue Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("Vue Dashboard")).not.toBeInTheDocument();
+  });
 
-    // Then apply technology filter
+  it("filters by selected technology correctly", async () => {
+    const user = userEvent.setup();
+    render(<ProjectsList projects={mockProjects} />);
+
     const filterButtons = screen.getAllByRole("button");
     const reactButton = filterButtons.find((button) =>
       button.textContent?.includes("React"),
     );
     if (!reactButton) throw new Error("React button not found");
-    fireEvent.click(reactButton);
 
-    // Should only show React Dashboard (both filters applied)
-    expect(screen.getByText("React Dashboard")).toBeInTheDocument();
-    expect(screen.queryByText("Vue Dashboard")).not.toBeInTheDocument();
+    await act(async () => {
+      await user.click(reactButton);
+    });
+
+    // Should only show projects with React
+    mockProjects.forEach((project) => {
+      if ("React" in project.technologies) {
+        expect(screen.getByText(project.title)).toBeInTheDocument();
+      } else {
+        expect(screen.queryByText(project.title)).not.toBeInTheDocument();
+      }
+    });
+  });
+
+  it("shows all projects when 'all' filter is selected", async () => {
+    const user = userEvent.setup();
+    render(<ProjectsList projects={mockProjects} />);
+
+    const filterButtons = screen.getAllByRole("button");
+    const reactButton = filterButtons.find((button) =>
+      button.textContent?.includes("React"),
+    );
+    if (!reactButton) throw new Error("React button not found");
+
+    await act(async () => {
+      await user.click(reactButton);
+    });
+
+    // Then click 'all'
+    const allButton = filterButtons.find(
+      (button) => button.textContent === "all",
+    );
+    if (!allButton) throw new Error("All button not found");
+
+    await act(async () => {
+      await user.click(allButton);
+    });
+
+    // Should show all projects
+    mockProjects.forEach((project) => {
+      expect(screen.getByText(project.title)).toBeInTheDocument();
+    });
+  });
+
+  it("displays correct technology count", () => {
+    render(<ProjectsList projects={mockProjects} />);
+
+    const filterButtons = screen.getAllByRole("button");
+    const reactButtons = filterButtons.filter((button) =>
+      button.textContent?.includes("React"),
+    );
+    expect(reactButtons).toHaveLength(1);
+
+    const reactButton = reactButtons[0];
+    expect(reactButton.textContent).toBe("React (1)");
   });
 });

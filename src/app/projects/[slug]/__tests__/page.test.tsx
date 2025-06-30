@@ -27,7 +27,7 @@ const minimalProject: Project = {
   url: "",
   image: "",
   content: undefined,
-  technologies: [],
+  technologies: {},
   date: undefined,
 };
 
@@ -61,8 +61,13 @@ describe("ProjectPage", () => {
       mockProject.url,
     );
 
-    mockProject.technologies.forEach((tech) => {
+    // Check for the "Tools and techniques used" section
+    expect(screen.getByText("Tools and techniques used")).toBeInTheDocument();
+
+    // Check that each technology and its description are displayed
+    Object.entries(mockProject.technologies).forEach(([tech, description]) => {
       expect(screen.getByText(tech)).toBeInTheDocument();
+      expect(screen.getByText(description)).toBeInTheDocument();
     });
 
     const markdownContent = screen.getByTestId("markdown-content");
@@ -108,6 +113,9 @@ describe("ProjectPage", () => {
     expect(screen.queryByTestId("markdown-content")).not.toBeInTheDocument();
     expect(
       screen.queryByText(/\d{1,2}\/\d{1,2}\/\d{4}/),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Tools and techniques used"),
     ).not.toBeInTheDocument();
   });
 

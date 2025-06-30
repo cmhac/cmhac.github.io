@@ -4,8 +4,8 @@ description: " I analyzed federal school-discipline data to expose that hundreds
   of elementary-age children are arrested each year — and that the burden falls
   heaviest on Black students and those with disabilities."
 technologies:
-  - ETL
-  - Python
+  ETL: "Extract, Transform, Load processes for data cleaning"
+  Python: "Data analysis and statistical programming language"
 url: https://www.cbsnews.com/news/hundreds-of-elementary-students-arrested-at-us-schools/
 image: /media/Screenshot 2025-06-26 at 5.13.04 PM.png
 featured: false

@@ -132,7 +132,7 @@ describe("Projects Page", () => {
     render(await ProjectsPage());
 
     mockProjects.forEach((project) => {
-      project.technologies.forEach((tech) => {
+      Object.keys(project.technologies).forEach((tech) => {
         const techTags = screen.getAllByText(tech);
         techTags.forEach((tag) => {
           if (tag.tagName === "BUTTON") {

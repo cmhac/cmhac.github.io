@@ -46,10 +46,10 @@ describe("ProjectCard", () => {
     );
   });
 
-  it("renders technologies as terminal-style tags", () => {
+  it("renders technologies as terminal-style tags with descriptions", () => {
     render(<ProjectCard project={projectWithSlug} />);
 
-    projectWithSlug.technologies.forEach((tech) => {
+    Object.keys(projectWithSlug.technologies).forEach((tech) => {
       const tag = screen.getByText(tech);
       expect(tag).toBeInTheDocument();
       expect(tag).toHaveClass(
@@ -58,6 +58,17 @@ describe("ProjectCard", () => {
         "font-mono",
       );
     });
+  });
+
+  it("shows technology descriptions on hover/focus", () => {
+    render(<ProjectCard project={projectWithSlug} />);
+
+    Object.entries(projectWithSlug.technologies).forEach(
+      ([tech, description]) => {
+        const techElement = screen.getByText(tech);
+        expect(techElement).toHaveAttribute("title", description);
+      },
+    );
   });
 
   it("renders date with terminal styling", () => {
@@ -80,7 +91,7 @@ describe("ProjectCard", () => {
     const minimalProject = {
       title: "Minimal Project",
       description: "Basic description",
-      technologies: [],
+      technologies: {},
       url: "https://example.com",
       image: "",
       featured: false,

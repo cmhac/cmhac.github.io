@@ -74,16 +74,28 @@ export default async function ProjectPage({ params }: Props) {
                 {project.description}
               </p>
 
-              {project.technologies.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              {Object.keys(project.technologies).length > 0 && (
+                <div className="mb-6">
+                  <h2 className="text-lg font-mono font-bold text-terminal-green mb-4">
+                    Tools and techniques used
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {Object.entries(project.technologies).map(
+                      ([tech, description]) => (
+                        <div
+                          key={tech}
+                          className="bg-terminal-selection/30 border border-terminal-selection rounded-lg p-3"
+                        >
+                          <div className="text-terminal-cyan font-mono font-bold text-sm mb-1">
+                            {tech}
+                          </div>
+                          <div className="text-terminal-text/80 text-sm">
+                            {description}
+                          </div>
+                        </div>
+                      ),
+                    )}
+                  </div>
                 </div>
               )}
 

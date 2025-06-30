@@ -3,8 +3,8 @@ title: enforce-notebook-run-order
 description: A Python-based pre-commit hook to force Jupyter notebooks to be run
   in the correct order
 technologies:
-  - Python
-  - Pre-commit
+  Python: "Programming language for building the validation tool"
+  Pre-commit: "Git hook framework for automated code quality checks"
 url: https://github.com/cmhac/enforce-notebook-run-order
 image: /media/Screenshot 2025-06-26 at 5.26.02 PM.png
 featured: false

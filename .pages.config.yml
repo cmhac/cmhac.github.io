@@ -12,11 +12,10 @@ collections:
         widget: text
       - name: technologies
         label: Technologies
-        widget: list
-        field:
-          name: technology
-          label: Technology
-          widget: string
+        widget: map
+        key_label: Technology Name
+        value_label: Description
+        hint: "Add technologies used in this project with descriptions"
       - name: url
         label: Project URL
         widget: string

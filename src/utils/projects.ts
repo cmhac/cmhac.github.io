@@ -5,7 +5,7 @@ import matter from "gray-matter";
 export interface Project {
   title: string;
   description: string;
-  technologies: string[];
+  technologies: Record<string, string>;
   url?: string;
   image?: string;
   featured: boolean;
@@ -38,7 +38,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
         ...data,
         title: data.title,
         description: data.description,
-        technologies: data.technologies || [],
+        technologies: data.technologies || {},
         url: data.url || "",
         image: data.image || "",
         featured: data.featured || false,
@@ -71,7 +71,7 @@ export async function getAllProjects(): Promise<Project[]> {
             ...data,
             title: data.title,
             description: data.description,
-            technologies: data.technologies || [],
+            technologies: data.technologies || {},
             url: data.url || "",
             image: data.image || "",
             featured: data.featured || false,

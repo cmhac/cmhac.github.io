@@ -4,8 +4,8 @@ description: I analyzed internal records to show that Chicago Police officers
   failed to use body cameras tens of thousands of times — especially in Black
   and Latino neighborhoods.
 technologies:
-  - Python
-  - FOIA
+  Python: "Data analysis and statistical programming language"
+  FOIA: "Freedom of Information Act requests for government transparency"
 url: https://www.cbsnews.com/chicago/news/left-in-the-dark-the-failed-promise-of-chicago-police-body-cameras/
 image: /media/Screenshot 2025-06-26 at 5.53.26 PM.png
 featured: false

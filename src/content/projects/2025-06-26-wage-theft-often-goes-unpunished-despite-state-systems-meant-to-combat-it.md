@@ -3,9 +3,9 @@ title: Wage theft often goes unpunished despite state systems meant to combat it
 description: "An investigation into failings at state labor departments to
   recover back pay on behalf of wage theft victims. "
 technologies:
-  - Python
-  - FOIA
-  - ETL
+  Python: "Data cleaning and statistical analysis programming language"
+  FOIA: "Freedom of Information Act requests to state agencies"
+  ETL: "Extract, Transform, Load processes for multi-state data integration"
 url: https://www.cbsnews.com/news/owed-employers-face-little-accountability-for-wage-theft/
 image: /media/Screenshot 2025-06-26 at 3.52.17 PM.png
 featured: true

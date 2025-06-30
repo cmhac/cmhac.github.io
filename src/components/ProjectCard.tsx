@@ -43,16 +43,19 @@ export default function ProjectCard({ project }: { project: Project }) {
               {project.description}
             </p>
 
-            {project.technologies.length > 0 && (
+            {Object.keys(project.technologies).length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                {Object.entries(project.technologies).map(
+                  ([tech, description]) => (
+                    <span
+                      key={tech}
+                      title={description}
+                      className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono cursor-help"
+                    >
+                      {tech}
+                    </span>
+                  ),
+                )}
               </div>
             )}
           </div>

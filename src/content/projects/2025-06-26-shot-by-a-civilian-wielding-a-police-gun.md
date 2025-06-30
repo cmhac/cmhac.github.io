@@ -3,11 +3,11 @@ title: Shot by a civilian wielding a police gun
 description: "This multi-year investigation uncovered a hidden economy where
   used police guns are sold to members of the public. "
 technologies:
-  - FOIA
-  - FOIA automation
-  - Python
-  - ETL
-  - LLM
+  FOIA: "Freedom of Information Act requests for government records"
+  FOIA automation: "Automated systems for mass public records requests"
+  Python: "Data processing and automation programming language"
+  ETL: "Extract, Transform, Load pipelines for large datasets"
+  LLM: "Large Language Models for document analysis and summarization"
 url: https://www.cbsnews.com/police-selling-guns/
 image: /media/Screenshot 2025-06-26 at 3.34.08 PM.png
 featured: true

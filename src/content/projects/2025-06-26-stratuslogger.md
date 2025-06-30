@@ -3,9 +3,9 @@ title: stratuslogger
 description: A Chrome extension that added integrated transcription features
   into the web UI for the Stratus content management system.
 technologies:
-  - Javascript
-  - React
-  - Chrome extension
+  Javascript: "Core programming language for the extension"
+  React: "Frontend framework for building the UI components"
+  Chrome extension: "Browser extension platform for integration with web pages"
 url: https://github.com/cmhac/StratusLogger
 image: /media/Screenshot 2025-06-26 at 5.46.37 PM.png
 featured: false

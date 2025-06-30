@@ -7,7 +7,10 @@ import { ReactElement } from "react";
 export const mockProject = {
   title: "Test Project",
   description: "A test project description",
-  technologies: ["React", "TypeScript"],
+  technologies: {
+    React: "Frontend framework for building the user interface",
+    TypeScript: "Type safety and better developer experience",
+  },
   url: "https://example.com",
   image: "/media/test.png",
   featured: true,

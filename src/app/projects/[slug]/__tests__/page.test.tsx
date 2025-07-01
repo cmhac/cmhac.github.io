@@ -61,13 +61,26 @@ describe("ProjectPage", () => {
       mockProject.url,
     );
 
-    // Check for the "Tools and techniques used" section
+    // Check for the "Tools and techniques used" section at the bottom
     expect(screen.getByText("Tools and techniques used")).toBeInTheDocument();
 
-    // Check that each technology and its description are displayed
+    // Check that each technology appears twice - once in chips and once in detailed section
     Object.entries(mockProject.technologies).forEach(([tech, description]) => {
-      expect(screen.getByText(tech)).toBeInTheDocument();
+      const techElements = screen.getAllByText(tech);
+      expect(techElements).toHaveLength(2); // Once in chip, once in detailed section
       expect(screen.getByText(description)).toBeInTheDocument();
+    });
+
+    // Check that the technology chips (with tooltips) are present
+    Object.entries(mockProject.technologies).forEach(([tech, description]) => {
+      const chipElement = screen
+        .getAllByText(tech)
+        .find(
+          (el) =>
+            el.getAttribute("title") === description &&
+            el.classList.contains("cursor-help"),
+        );
+      expect(chipElement).toBeInTheDocument();
     });
 
     const markdownContent = screen.getByTestId("markdown-content");

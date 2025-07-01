@@ -75,27 +75,18 @@ export default async function ProjectPage({ params }: Props) {
               </p>
 
               {Object.keys(project.technologies).length > 0 && (
-                <div className="mb-6">
-                  <h2 className="text-lg font-mono font-bold text-terminal-green mb-4">
-                    Tools and techniques used
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(project.technologies).map(
-                      ([tech, description]) => (
-                        <div
-                          key={tech}
-                          className="bg-terminal-selection/30 border border-terminal-selection rounded-lg p-3"
-                        >
-                          <div className="text-terminal-cyan font-mono font-bold text-sm mb-1">
-                            {tech}
-                          </div>
-                          <div className="text-terminal-text/80 text-sm">
-                            {description}
-                          </div>
-                        </div>
-                      ),
-                    )}
-                  </div>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {Object.entries(project.technologies).map(
+                    ([tech, description]) => (
+                      <span
+                        key={tech}
+                        title={description}
+                        className="bg-terminal-selection/50 text-terminal-cyan px-3 py-1 rounded-full text-sm font-mono cursor-help"
+                      >
+                        {tech}
+                      </span>
+                    ),
+                  )}
                 </div>
               )}
 
@@ -137,6 +128,31 @@ export default async function ProjectPage({ params }: Props) {
             {project.content && (
               <div className="prose prose-invert max-w-none [&>*]:mb-8 [&>p]:mb-8 [&>p]:leading-relaxed [&>ul]:mb-8 [&>ol]:mb-8 [&>h1]:mt-16 [&>h2]:mt-16 [&>h3]:mt-16 [&_a]:text-terminal-green [&_a]:underline [&_a]:decoration-terminal-green/50 [&_a]:underline-offset-4 [&_a]:transition-colors hover:[&_a]:text-terminal-cyan hover:[&_a]:decoration-terminal-cyan">
                 <ReactMarkdown>{project.content}</ReactMarkdown>
+              </div>
+            )}
+
+            {Object.keys(project.technologies).length > 0 && (
+              <div className="mt-12 pt-8 border-t border-terminal-selection">
+                <h2 className="text-lg font-mono font-bold text-terminal-green mb-6">
+                  Tools and techniques used
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(project.technologies).map(
+                    ([tech, description]) => (
+                      <div
+                        key={tech}
+                        className="bg-terminal-selection/30 border border-terminal-selection rounded-lg p-4"
+                      >
+                        <div className="text-terminal-cyan font-mono font-bold text-sm mb-2">
+                          {tech}
+                        </div>
+                        <div className="text-terminal-text/80 text-sm leading-relaxed">
+                          {description}
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
             )}
           </article>

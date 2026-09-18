@@ -96,6 +96,32 @@ describe("project utils", () => {
       expect(projects[0].slug).toBe("analysis-a");
     });
 
+    it("strips a Pages CMS date prefix out of the slug", async () => {
+      mockReaddir.mockResolvedValueOnce(["2026-09-18-analysis-a.md"] as any);
+      mockReadFile.mockResolvedValueOnce(
+        generateMockFileContent(mockProjects[1]),
+      );
+
+      const projects = await getAllProjects();
+      expect(projects[0].slug).toBe("analysis-a");
+    });
+
+    it("sorts an entry with no order to the end of its section", async () => {
+      mockReaddir.mockResolvedValueOnce([
+        "analysis-a.md",
+        "no-order.md",
+      ] as any);
+      mockReadFile.mockImplementation(async (filePath) => {
+        if (String(filePath).endsWith("no-order.md")) {
+          return `---\ntitle: No Order\nnote: Added via the CMS\nkind: Reporting and analysis\n---\n\nBody`;
+        }
+        return generateMockFileContent(mockProjects[1]);
+      });
+
+      const projects = await getAllProjects();
+      expect(projects.map((p) => p.slug)).toEqual(["analysis-a", "no-order"]);
+    });
+
     it("parses the markdown body as content", async () => {
       const projects = await getAllProjects();
       expect(projects[0].content).toBe("Body A");

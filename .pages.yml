@@ -58,6 +58,15 @@ content:
     label: Reporting & Tools
     path: src/content/projects
     type: collection
+    # Without this, Pages CMS defaults to "{year}-{month}-{day}-{primary}.md" and
+    # the date prefix would end up in the URL, since the slug is the filename.
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, kind, order]
+      sort: [order, title, kind]
+      default:
+        sort: order
+        order: asc
     fields:
       - name: title
         label: Title
@@ -97,9 +106,17 @@ content:
     label: Experience
     path: src/content/experience
     type: collection
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, org, dates, order]
+      sort: [order, title]
+      default:
+        sort: order
+        order: asc
     fields:
       - name: order
         label: Order
+        description: Position in the list, lowest first (most recent job at the top).
         type: number
         required: true
       - name: title

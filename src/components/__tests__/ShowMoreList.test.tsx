@@ -4,7 +4,7 @@ import ShowMoreList from "../ShowMoreList";
 const items = Array.from({ length: 12 }, (_, i) => ({
   slug: `item-${i}`,
   title: `Item ${i}`,
-  note: `Note ${i}`,
+  description: `Note ${i}`,
 }));
 
 describe("ShowMoreList", () => {

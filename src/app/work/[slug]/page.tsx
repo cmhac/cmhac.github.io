@@ -12,13 +12,21 @@ interface Props {
   };
 }
 
+function hostname(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getProjectBySlug(params.slug);
   if (!project) return { title: "Project not found" };
 
   return {
     title: `${project.title} | Chris Hacker`,
-    description: project.note,
+    description: project.description,
   };
 }
 
@@ -58,14 +66,24 @@ export default async function ProjectPage({ params }: Props) {
           {project.title}
         </h1>
         <p className="m-0 max-w-[50ch] opacity-[0.55] [text-wrap:pretty]">
-          {project.note}
+          {project.description}
         </p>
+        {project.url && (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[13px] opacity-[0.55] hover:opacity-100 underline underline-offset-[3px] self-start"
+          >
+            {hostname(project.url)} ↗
+          </a>
+        )}
       </header>
 
-      {project.cover && (
+      {project.image && (
         <div className="relative w-full aspect-video">
           <Image
-            src={project.cover}
+            src={project.image}
             alt={project.title}
             fill
             className="object-cover"

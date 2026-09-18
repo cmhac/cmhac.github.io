@@ -7,11 +7,11 @@ export type ProjectKind = "Reporting and analysis" | "Tools and infrastructure";
 export interface Project {
   slug: string;
   title: string;
-  note: string;
+  description: string;
   kind: ProjectKind;
-  order: number;
   url?: string;
-  cover?: string;
+  image?: string;
+  date?: string;
   content: string;
 }
 
@@ -36,18 +36,16 @@ async function readProjectFile(
   return {
     slug: slugFromFilename(file),
     title: data.title,
-    note: data.note,
+    description: data.description,
     kind: data.kind,
-    // An entry saved without an order sorts to the end of its section, not the top.
-    order:
-      typeof data.order === "number" ? data.order : Number.MAX_SAFE_INTEGER,
     url: data.url || undefined,
-    cover: data.cover || undefined,
+    image: data.image || undefined,
+    date: data.date ? String(data.date) : undefined,
     content: content.trim(),
   };
 }
 
-/** All projects, ordered as one ring: analysis items first (by `order`), then tools items (by `order`). */
+/** All projects, ordered as one ring: analysis items first, then tools, each newest first. */
 export async function getAllProjects(): Promise<Project[]> {
   const projectsDir = path.join(process.cwd(), "src/content/projects");
   const files = (await fs.readdir(projectsDir)).filter((f) =>
@@ -60,7 +58,10 @@ export async function getAllProjects(): Promise<Project[]> {
   return projects.sort((a, b) => {
     const kindDiff = KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind);
     if (kindDiff !== 0) return kindDiff;
-    if (a.order !== b.order) return a.order - b.order;
+    // Undated entries sort to the end rather than the top.
+    const aDate = a.date ? new Date(a.date).getTime() : -Infinity;
+    const bDate = b.date ? new Date(b.date).getTime() : -Infinity;
+    if (aDate !== bDate) return bDate - aDate;
     return a.title.localeCompare(b.title);
   });
 }

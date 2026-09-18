@@ -9,47 +9,47 @@ import {
 interface MockProject {
   slug: string;
   title: string;
-  note: string;
+  description: string;
   kind: "Reporting and analysis" | "Tools and infrastructure";
-  order: number;
+  date?: string;
   url?: string;
-  cover?: string;
+  image?: string;
   content: string;
 }
 
 const mockProjects: MockProject[] = [
   {
-    slug: "analysis-b",
-    title: "Analysis B",
-    note: "Second analysis item",
+    slug: "analysis-older",
+    title: "Analysis Older",
+    description: "Older analysis item",
     kind: "Reporting and analysis",
-    order: 2,
-    content: "Body B",
+    date: "2022-01-01",
+    content: "Body older",
   },
   {
-    slug: "analysis-a",
-    title: "Analysis A",
-    note: "First analysis item",
+    slug: "analysis-newer",
+    title: "Analysis Newer",
+    description: "Newer analysis item",
     kind: "Reporting and analysis",
-    order: 1,
-    url: "https://example.com/a",
-    content: "Body A",
+    date: "2024-05-16",
+    url: "https://www.cbsnews.com/example/",
+    content: "Body newer",
   },
   {
     slug: "tool-a",
     title: "Tool A",
-    note: "A tool",
+    description: "A tool",
     kind: "Tools and infrastructure",
-    order: 1,
+    date: "2023-05-30",
     content: "Tool body",
   },
 ];
 
 const generateMockFileContent = (project: MockProject) => `---
 title: ${project.title}
-note: ${project.note}
+description: ${project.description}
 kind: ${project.kind}
-order: ${project.order}
+${project.date ? `date: ${project.date}` : ""}
 ${project.url ? `url: ${project.url}` : ""}
 ---
 
@@ -82,49 +82,60 @@ describe("project utils", () => {
   });
 
   describe("getAllProjects", () => {
-    it("orders as one ring: analysis by `order`, then tools by `order`", async () => {
+    it("orders as one ring: analysis first, then tools, each newest first", async () => {
       const projects = await getAllProjects();
       expect(projects.map((p) => p.slug)).toEqual([
-        "analysis-a",
-        "analysis-b",
+        "analysis-newer",
+        "analysis-older",
         "tool-a",
       ]);
     });
 
     it("derives the slug from the filename", async () => {
       const projects = await getAllProjects();
-      expect(projects[0].slug).toBe("analysis-a");
+      expect(projects[0].slug).toBe("analysis-newer");
     });
 
     it("strips a Pages CMS date prefix out of the slug", async () => {
-      mockReaddir.mockResolvedValueOnce(["2026-09-18-analysis-a.md"] as any);
+      mockReaddir.mockResolvedValueOnce([
+        "2026-09-18-analysis-newer.md",
+      ] as any);
       mockReadFile.mockResolvedValueOnce(
         generateMockFileContent(mockProjects[1]),
       );
 
       const projects = await getAllProjects();
-      expect(projects[0].slug).toBe("analysis-a");
+      expect(projects[0].slug).toBe("analysis-newer");
     });
 
-    it("sorts an entry with no order to the end of its section", async () => {
+    it("keeps the real published url and image from the entry", async () => {
+      const projects = await getAllProjects();
+      expect(projects[0].url).toBe("https://www.cbsnews.com/example/");
+      expect(projects[1].url).toBeUndefined();
+    });
+
+    it("parses the markdown body as content", async () => {
+      const projects = await getAllProjects();
+      expect(projects[0].content).toBe("Body newer");
+    });
+
+    it("sorts an undated entry to the end of its section", async () => {
       mockReaddir.mockResolvedValueOnce([
-        "analysis-a.md",
-        "no-order.md",
+        "analysis-newer.md",
+        "no-date.md",
       ] as any);
       mockReadFile.mockImplementation(async (filePath) => {
-        if (String(filePath).endsWith("no-order.md")) {
-          return `---\ntitle: No Order\nnote: Added via the CMS\nkind: Reporting and analysis\n---\n\nBody`;
+        if (String(filePath).endsWith("no-date.md")) {
+          return `---\ntitle: No Date\ndescription: Added via the CMS\nkind: Reporting and analysis\n---\n\nBody`;
         }
         return generateMockFileContent(mockProjects[1]);
       });
 
       const projects = await getAllProjects();
-      expect(projects.map((p) => p.slug)).toEqual(["analysis-a", "no-order"]);
-    });
-
-    it("parses the markdown body as content", async () => {
-      const projects = await getAllProjects();
-      expect(projects[0].content).toBe("Body A");
+      expect(projects.map((p) => p.slug)).toEqual([
+        "analysis-newer",
+        "no-date",
+      ]);
     });
   });
 
@@ -138,19 +149,14 @@ describe("project utils", () => {
 
   describe("getProjectBySlug", () => {
     it("returns the project when the slug exists", async () => {
-      const project = await getProjectBySlug("analysis-a");
-      expect(project?.title).toBe("Analysis A");
-      expect(project?.url).toBe("https://example.com/a");
+      const project = await getProjectBySlug("analysis-newer");
+      expect(project?.title).toBe("Analysis Newer");
+      expect(project?.description).toBe("Newer analysis item");
     });
 
     it("returns null when the slug doesn't exist", async () => {
       const project = await getProjectBySlug("non-existent");
       expect(project).toBeNull();
-    });
-
-    it("leaves url undefined when not set", async () => {
-      const project = await getProjectBySlug("analysis-b");
-      expect(project?.url).toBeUndefined();
     });
   });
 });

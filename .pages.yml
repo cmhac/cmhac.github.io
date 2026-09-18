@@ -62,45 +62,52 @@ content:
     # the date prefix would end up in the URL, since the slug is the filename.
     filename: "{fields.title}.md"
     view:
-      fields: [title, kind, order]
-      sort: [order, title, kind]
+      fields: [title, kind, date]
+      sort: [date, title, kind]
       default:
-        sort: order
-        order: asc
+        sort: date
+        order: desc
     fields:
       - name: title
-        label: Title
+        label: Project Title
         type: string
         required: true
-      - name: note
-        label: One-line Description
-        description: Shown on the index list and under the title on the detail page.
-        type: string
+      - name: description
+        label: Project Description
+        description: Shown on the homepage list and under the title on the detail page.
+        type: text
         required: true
       - name: kind
         label: Section
+        description: Which homepage section this appears under.
         type: select
         options:
           values: ["Reporting and analysis", "Tools and infrastructure"]
         required: true
-      - name: order
-        label: Order
-        description: Position within its section, lowest first.
-        type: number
-        required: true
+      - name: technologies
+        label: Technologies Used
+        type: string
+        list: true
       - name: url
-        label: Published URL
+        label: Project URL
         type: string
         required: false
-      - name: cover
-        label: Cover Image
-        description: 16:9. Leave blank to omit the cover image on the detail page.
+      - name: image
+        label: Project Image
+        description: 16:9. Leave blank to omit the image on the detail page.
         type: image
         required: false
+      - name: featured
+        label: Featured Project
+        type: boolean
+        default: false
+      - name: date
+        label: Project Date
+        description: Sorts the list within each section, newest first.
+        type: date
       - name: body
-        label: Body
+        label: Content
         type: rich-text
-        required: true
 
   - name: experience
     label: Experience

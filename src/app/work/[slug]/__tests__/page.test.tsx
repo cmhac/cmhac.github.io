@@ -6,25 +6,25 @@ const projects = [
   {
     slug: "first",
     title: "First Project",
-    note: "First note",
+    description: "First note",
     kind: "Reporting and analysis" as const,
-    order: 1,
+
     content: "First body.",
   },
   {
     slug: "second",
     title: "Second Project",
-    note: "Second note",
+    description: "Second note",
     kind: "Reporting and analysis" as const,
-    order: 2,
+
     content: "Second body.",
   },
   {
     slug: "third",
     title: "Third Project",
-    note: "Third note",
+    description: "Third note",
     kind: "Tools and infrastructure" as const,
-    order: 1,
+
     content: "Third body.",
   },
 ];
@@ -50,7 +50,7 @@ jest.mock("@/utils/site", () => ({
 }));
 
 describe("Project detail page", () => {
-  it("renders the title, kind and note", async () => {
+  it("renders the title, kind and description", async () => {
     render(await ProjectPage({ params: { slug: "second" } }));
 
     expect(

@@ -2,6 +2,7 @@ import { getProjectsByKind } from "@/utils/projects";
 import { getExperience } from "@/utils/experience";
 import { getSiteSettings } from "@/utils/site";
 import ShowMoreList from "@/components/ShowMoreList";
+import KonamiCode from "@/components/KonamiCode";
 
 const CONTACT_LABELS = {
   washingtonPost: "Washington Post byline",
@@ -43,6 +44,7 @@ export default async function Home() {
 
   return (
     <div className="max-w-[660px] mx-auto px-[28px] pt-[96px] pb-[160px] flex flex-col gap-[88px]">
+      <KonamiCode />
       <header className="flex flex-col gap-[28px]">
         <h1 className="m-0 text-[16px] font-medium">{site.author}</h1>
         <p className="m-0 max-w-[50ch] [text-wrap:pretty]">{site.bio}</p>

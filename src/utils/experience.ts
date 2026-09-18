@@ -24,7 +24,9 @@ export async function getExperience(): Promise<Experience[]> {
       const raw = await fs.readFile(path.join(dir, file), "utf8");
       const { data } = matter(raw);
       return {
-        order: data.order ?? 0,
+        // An entry saved without an order sorts to the end, not the top.
+        order:
+          typeof data.order === "number" ? data.order : Number.MAX_SAFE_INTEGER,
         title: data.title,
         org: data.org,
         dates: data.dates,
@@ -33,5 +35,8 @@ export async function getExperience(): Promise<Experience[]> {
     }),
   );
 
-  return items.sort((a, b) => a.order - b.order);
+  return items.sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    return a.title.localeCompare(b.title);
+  });
 }

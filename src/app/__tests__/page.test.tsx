@@ -5,18 +5,16 @@ import { mockSiteSettings } from "./test-utils";
 const analysisProjects = Array.from({ length: 6 }, (_, i) => ({
   slug: `analysis-${i}`,
   title: `Analysis project ${i}`,
-  note: `Analysis note ${i}`,
+  description: `Analysis note ${i}`,
   kind: "Reporting and analysis" as const,
-  order: i,
 }));
 
 const toolsProjects = [
   {
     slug: "tool-0",
     title: "Tool project 0",
-    note: "Tool note 0",
+    description: "Tool note 0",
     kind: "Tools and infrastructure" as const,
-    order: 0,
   },
 ];
 

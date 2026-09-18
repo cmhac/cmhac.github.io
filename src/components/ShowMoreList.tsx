@@ -8,7 +8,7 @@ const PAGE = 5;
 interface ListItem {
   slug: string;
   title: string;
-  note: string;
+  description: string;
 }
 
 export default function ShowMoreList({ items }: { items: ListItem[] }) {
@@ -28,7 +28,7 @@ export default function ShowMoreList({ items }: { items: ListItem[] }) {
             <span className="flex flex-col gap-1 min-w-0">
               <span className="font-medium">{item.title}</span>
               <span className="opacity-[0.55] [text-wrap:pretty]">
-                {item.note}
+                {item.description}
               </span>
             </span>
           </Link>

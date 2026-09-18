@@ -5,11 +5,11 @@ import type { SiteSettings } from "@/utils/site";
 export const mockProject: Project = {
   slug: "test-project",
   title: "Test Project",
-  note: "A test project description",
+  description: "A test project description",
   kind: "Reporting and analysis",
-  order: 1,
+  date: "2024-01-01",
   url: "https://example.com",
-  cover: undefined,
+  image: undefined,
   content: "This is the project content.",
 };
 

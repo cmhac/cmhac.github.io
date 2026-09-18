@@ -1,186 +1,109 @@
 import { render, screen } from "@testing-library/react";
 import Home from "../page";
-import { mockProject } from "./test-utils";
+import { mockSiteSettings } from "./test-utils";
 
-// Mock getHomePageProjects
-jest.mock("@/utils/projects", () => ({
-  getHomePageProjects: jest.fn(() => ({
-    featured: [
-      {
-        ...mockProject,
-        title: "Featured Project",
-        description: "A featured project description",
-      },
-      {
-        ...mockProject,
-        title: "Featured Project Without Image",
-        description: "A featured project without an image",
-        image: undefined,
-      },
-    ],
-    recent: [],
-  })),
+const analysisProjects = Array.from({ length: 6 }, (_, i) => ({
+  slug: `analysis-${i}`,
+  title: `Analysis project ${i}`,
+  note: `Analysis note ${i}`,
+  kind: "Reporting and analysis" as const,
+  order: i,
 }));
 
-// Mock fs for site settings
-jest.mock("fs/promises", () => ({
-  readFile: jest.fn().mockResolvedValue(
-    JSON.stringify({
-      title: "Chris Hacker",
-      description: "Investigative Data Journalist & Engineer",
-      author: "Chris Hacker",
-      socialLinks: {
-        github: "https://github.com/cmhac",
-        linkedin: "#",
-        twitter: "#",
-      },
-    }),
+const toolsProjects = [
+  {
+    slug: "tool-0",
+    title: "Tool project 0",
+    note: "Tool note 0",
+    kind: "Tools and infrastructure" as const,
+    order: 0,
+  },
+];
+
+jest.mock("@/utils/projects", () => ({
+  getProjectsByKind: jest.fn((kind: string) =>
+    Promise.resolve(
+      kind === "Reporting and analysis" ? analysisProjects : toolsProjects,
+    ),
   ),
 }));
 
-// Mock the ProjectCard component
-jest.mock("@/components/ProjectCard", () => {
-  return function MockProjectCard({ project }: { project: any }) {
-    return (
-      <div data-testid="project-card">
-        <h3>{project.title}</h3>
-        <p>{project.description}</p>
-        {project.image && <img src={project.image} alt={project.title} />}
-        <a href={project.url}>$ explore project</a>
-      </div>
-    );
-  };
-});
+jest.mock("@/utils/experience", () => ({
+  getExperience: jest.fn(() =>
+    Promise.resolve([
+      {
+        order: 1,
+        title: "Computational Journalist",
+        org: "The Washington Post · Washington, DC",
+        dates: "Nov 2025 – Present",
+        roles: [],
+      },
+      {
+        order: 2,
+        title: "WBBM | CBS Chicago",
+        org: "Chicago, IL",
+        dates: "Jan 2019 – Apr 2022",
+        roles: [
+          { title: "Data Journalist", dates: "Aug 2019 – Apr 2022" },
+          { title: "Desk Assistant", dates: "Jan 2019 – Aug 2019" },
+        ],
+      },
+    ]),
+  ),
+}));
+
+jest.mock("@/utils/site", () => ({
+  getSiteSettings: jest.fn(() => Promise.resolve(mockSiteSettings)),
+}));
 
 describe("Home Page", () => {
-  it("renders hero section with title and description", async () => {
+  it("renders the header with name and bio", async () => {
     render(await Home());
 
-    // Check headshot image
-    const headshot = screen.getByRole("img", { name: "Chris Hacker" });
-    expect(headshot).toBeInTheDocument();
-    expect(headshot.closest("div")).toHaveClass(
-      "relative",
-      "w-32",
-      "h-32",
-      "overflow-hidden",
-      "rounded-full",
-    );
-
-    const title = screen.getByText("Chris Hacker");
-    expect(title).toBeInTheDocument();
-    expect(title).toHaveClass("text-terminal-cyan", "whitespace-nowrap");
-
-    const description = screen.getByText(
-      "Investigative Data Journalist & Engineer",
-    );
-    expect(description).toBeInTheDocument();
-    expect(description).toHaveClass("text-terminal-text");
-    expect(description).not.toHaveClass("whitespace-nowrap");
-
-    // Check header container has proper layout and constraints
-    const header = screen.getByRole("heading", { level: 1 });
-    expect(header).toHaveClass(
-      "flex",
-      "flex-wrap",
-      "justify-center",
-      "gap-2",
-      "min-h-[3.5rem]",
-      "items-center",
-      "max-w-[90vw]",
-      "mx-auto",
-    );
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Chris Hacker" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(mockSiteSettings.bio)).toBeInTheDocument();
   });
 
-  it("ensures proper text wrapping behavior", async () => {
+  it("shows only 5 reporting and analysis items with a show more button", async () => {
     render(await Home());
 
-    // Author name and separator should not wrap
-    const authorName = screen.getByText("Chris Hacker");
-    const separator = screen.getByText("|", { exact: false });
-    const authorSpan = authorName.closest("span");
-    const separatorSpan = separator.closest("span");
-
-    expect(authorSpan).toHaveClass("whitespace-nowrap");
-    expect(separatorSpan).toHaveClass("whitespace-nowrap");
-
-    // Description should be allowed to wrap
-    const description = screen.getByText(
-      "Investigative Data Journalist & Engineer",
-    );
-    expect(description.closest("span")).not.toHaveClass("whitespace-nowrap");
+    expect(screen.getByText("Analysis project 0")).toBeInTheDocument();
+    expect(screen.getByText("Analysis project 4")).toBeInTheDocument();
+    expect(screen.queryByText("Analysis project 5")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Show more").length).toBeGreaterThan(0);
   });
 
-  it("renders navigation links with correct styling", async () => {
+  it("does not show a show more button for a section under the page size", async () => {
     render(await Home());
 
-    const viewProjectsLink = screen.getByText("View Projects");
-    expect(viewProjectsLink).toHaveClass(
-      "bg-terminal-purple/20",
-      "text-terminal-purple",
-      "border",
-      "border-terminal-purple",
-    );
-
-    const aboutMeLink = screen.getByText("About Me");
-    expect(aboutMeLink).toHaveClass(
-      "bg-terminal-cyan/20",
-      "text-terminal-cyan",
-      "border",
-      "border-terminal-cyan",
-    );
+    expect(screen.getByText("Tool project 0")).toBeInTheDocument();
   });
 
-  it("renders featured projects section with terminal styling", async () => {
+  it("renders experience with nested roles", async () => {
     render(await Home());
 
-    const sectionTitle = screen.getByText("featured projects");
-    expect(sectionTitle).toHaveClass("text-terminal-purple");
-
-    const projectCards = screen.getAllByTestId("project-card");
-    expect(projectCards).toHaveLength(2);
-
-    const projectTitles = [
-      "Featured Project",
-      "Featured Project Without Image",
-    ];
-    projectTitles.forEach((title) => {
-      expect(screen.getByText(title)).toBeInTheDocument();
-    });
+    expect(screen.getByText("Computational Journalist")).toBeInTheDocument();
+    expect(screen.getByText("WBBM | CBS Chicago")).toBeInTheDocument();
+    expect(screen.getByText("Data Journalist")).toBeInTheDocument();
+    expect(screen.getByText("Desk Assistant")).toBeInTheDocument();
   });
 
-  it("renders project cards with terminal-style links", async () => {
+  it("renders contact links", async () => {
     render(await Home());
-    const projectLinks = screen.getAllByText("$ explore project");
-    expect(projectLinks[0]).toHaveAttribute("href", "https://example.com");
-    expect(projectLinks[1]).toHaveAttribute("href", "https://example.com");
 
-    const exploreAllLink = screen.getByText("➜ explore all projects");
-    expect(exploreAllLink).toHaveAttribute("href", "/projects");
-    expect(exploreAllLink).toHaveClass(
-      "bg-terminal-selection/30",
-      "text-terminal-text",
-      "border",
-      "border-terminal-selection",
-    );
+    const githubLink = screen.getByText("GitHub").closest("a");
+    expect(githubLink).toHaveAttribute("href", "https://github.com/cmhac");
+
+    const linkedinLink = screen.getByText("LinkedIn").closest("a");
+    expect(linkedinLink).toHaveAttribute("href", "#");
   });
 
-  it("renders project cards with and without images", async () => {
+  it("renders the footer", async () => {
     render(await Home());
 
-    // Check first project with image
-    const projectWithImage = screen
-      .getByText("Featured Project")
-      .closest("div[data-testid='project-card']");
-    const image = projectWithImage?.querySelector("img");
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", "/media/test.png");
-    expect(image).toHaveAttribute("alt", "Featured Project");
-
-    // Check second project without image
-    const projectWithoutImage = screen
-      .getByText("Featured Project Without Image")
-      .closest("div[data-testid='project-card']");
-    expect(projectWithoutImage?.querySelector("img")).not.toBeInTheDocument();
+    expect(screen.getByText(mockSiteSettings.location)).toBeInTheDocument();
+    expect(screen.getByText(mockSiteSettings.updatedLabel)).toBeInTheDocument();
   });
 });

@@ -2,47 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+:root {
+  --ink: #000000;
+  --ground: #ffffff;
+  --hairline: rgba(0, 0, 0, 0.14);
+  --hover: rgba(0, 0, 0, 0.035);
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    @apply selection:bg-terminal-selection selection:text-terminal-text;
+    --ink: #ffffff;
+    --ground: #000000;
+    --hairline: rgba(255, 255, 255, 0.14);
+    --hover: rgba(255, 255, 255, 0.05);
   }
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  height: 100%;
-  @apply bg-terminal text-terminal-text;
+  margin: 0;
+  padding: 0;
+  background: var(--ground);
+  color: var(--ink);
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Animated underline effect */
-.link-underline {
-  @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-terminal-purple after:transition-transform after:duration-300 after:ease-out hover:after:origin-bottom-left hover:after:scale-x-100;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Card hover effect */
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-lg hover:shadow-terminal-purple/20 hover:-translate-y-1;
+::selection {
+  background: var(--ink);
+  color: var(--ground);
 }
 
-/* Grid background with overlay */
-.grid-bg {
-  @apply relative bg-grid-pattern;
+.row {
+  padding: 16px 0;
+  border-top: 1px solid var(--hairline);
 }
-.grid-bg::after {
-  content: "";
-  @apply absolute inset-0 bg-terminal/90;
+
+.row-sm {
+  padding: 14px 0;
+}
+
+a.row:hover {
+  background: var(--hover);
 }

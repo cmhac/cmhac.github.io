@@ -2,17 +2,19 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">Page Not Found</h1>
-      <p className="text-gray-600 mb-8">
+    <div className="max-w-[660px] mx-auto px-[28px] pt-[96px] pb-[160px] flex flex-col gap-[28px]">
+      <h1 className="m-0 text-[30px] font-medium leading-[1.2] tracking-[-0.01em]">
+        Page not found
+      </h1>
+      <p className="m-0 max-w-[50ch] opacity-[0.55]">
         The page you&apos;re looking for doesn&apos;t exist.
       </p>
       <Link
         href="/"
-        className="text-blue-600 hover:text-blue-800 underline"
         data-testid="home-link"
+        className="text-[13px] opacity-[0.55] hover:opacity-100 self-start"
       >
-        Return Home
+        ← Chris Hacker
       </Link>
     </div>
   );

@@ -24,75 +24,105 @@ content:
         label: Author Name
         type: string
         required: true
-      - name: homeHeadshot
-        label: Homepage Profile Image
-        type: image
-        description: The profile image shown on the homepage (128x128px circular)
+      - name: bio
+        label: Homepage Bio
+        type: text
+        description: One paragraph shown under the name on the homepage.
+        required: true
+      - name: location
+        label: Footer Location
+        type: string
+        required: true
+      - name: updatedLabel
+        label: Footer "Updated" Label
+        type: string
+        required: true
       - name: socialLinks
-        label: Social Media Links
+        label: Contact Links
         type: object
         fields:
+          - name: washingtonPost
+            label: Washington Post Byline URL
+            type: string
           - name: github
             label: GitHub URL
             type: string
           - name: linkedin
             label: LinkedIn URL
             type: string
-          - name: twitter
-            label: Twitter URL
+          - name: bluesky
+            label: Bluesky URL
             type: string
 
-  - name: about
-    label: About Page
-    path: src/content/about.md
-    type: file
-    fields:
-      - name: title
-        label: Page Title
-        type: string
-        required: true
-      - name: description
-        label: Page Description
-        type: string
-        required: true
-      - name: image
-        label: About Page Image
-        type: image
-        description: The profile image shown on the about page
-      - name: body
-        label: Content
-        type: rich-text
-
   - name: projects
-    label: Projects
+    label: Reporting & Tools
     path: src/content/projects
     type: collection
     fields:
       - name: title
-        label: Project Title
+        label: Title
         type: string
         required: true
-      - name: description
-        label: Project Description
+      - name: note
+        label: One-line Description
+        description: Shown on the index list and under the title on the detail page.
         type: string
         required: true
-      - name: technologies
-        label: Technologies Used
-        type: string
-        list: true
+      - name: kind
+        label: Section
+        type: select
+        options:
+          values: ["Reporting and analysis", "Tools and infrastructure"]
+        required: true
+      - name: order
+        label: Order
+        description: Position within its section, lowest first.
+        type: number
+        required: true
       - name: url
-        label: Project URL
+        label: Published URL
         type: string
-      - name: image
-        label: Project Image
+        required: false
+      - name: cover
+        label: Cover Image
+        description: 16:9. Leave blank to omit the cover image on the detail page.
         type: image
-      - name: featured
-        label: Featured Project
-        type: boolean
-        default: false
-      - name: date
-        label: Project Date
-        type: date
+        required: false
       - name: body
-        label: Content
+        label: Body
         type: rich-text
+        required: true
+
+  - name: experience
+    label: Experience
+    path: src/content/experience
+    type: collection
+    fields:
+      - name: order
+        label: Order
+        type: number
+        required: true
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: org
+        label: Org / Location
+        type: string
+        required: true
+      - name: dates
+        label: Dates
+        type: string
+        required: true
+      - name: roles
+        label: Nested Roles
+        description: Only used for an employer with more than one role (e.g. WBBM).
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: Title
+            type: string
+          - name: dates
+            label: Dates
+            type: string

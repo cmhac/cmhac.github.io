@@ -1,11 +1,14 @@
 {
   "title": "Chris Hacker",
-  "description": "Investigative Data Journalist & Engineer",
+  "description": "Data journalist on the data team at The Washington Post, based in Washington, DC.",
   "author": "Chris Hacker",
-  "homeHeadshot": "/media/headshot.webp",
+  "bio": "I'm a data journalist on the data team at The Washington Post, based in Washington, DC. I build the pipelines, classifiers and alerting tools that surface stories, and do the analysis that turns messy public records into coverage.",
+  "location": "Washington, DC",
+  "updatedLabel": "Updated September 2026",
   "socialLinks": {
+    "washingtonPost": "",
     "github": "https://github.com/cmhac",
-    "linkedin": "#",
-    "twitter": "#"
+    "linkedin": "",
+    "bluesky": ""
   }
 }

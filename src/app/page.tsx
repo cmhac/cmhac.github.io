@@ -1,118 +1,135 @@
-import { promises as fs } from "fs";
-import path from "path";
-import Link from "next/link";
-import { getHomePageProjects } from "@/utils/projects";
-import type { Project } from "@/utils/projects";
-import ProjectCard from "@/components/ProjectCard";
-import Image from "next/image";
-import KonamiCode from "@/components/KonamiCode";
+import { getProjectsByKind } from "@/utils/projects";
+import { getExperience } from "@/utils/experience";
+import { getSiteSettings } from "@/utils/site";
+import ShowMoreList from "@/components/ShowMoreList";
 
-// Types for our CMS content
-interface SiteSettings {
-  title: string;
-  description: string;
-  author: string;
-  socialLinks: {
-    github: string;
-    linkedin: string;
-    twitter: string;
-  };
-}
+const CONTACT_LABELS = {
+  washingtonPost: "Washington Post byline",
+  github: "GitHub",
+  linkedin: "LinkedIn",
+  bluesky: "Bluesky",
+} as const;
 
-async function getSiteSettings(): Promise<SiteSettings> {
-  const filePath = path.join(process.cwd(), "src/config/site.json");
+function displayHandle(url: string): string {
+  if (!url) return "add link";
   try {
-    const data = await fs.readFile(filePath, "utf8");
-    return JSON.parse(data);
-  } catch (error) {
-    // Return default settings if file doesn't exist yet
-    return {
-      title: "Chris Hacker",
-      description: "Investigative Data Journalist & Engineer",
-      author: "Chris Hacker",
-      socialLinks: {
-        github: "https://github.com/cmhac",
-        linkedin: "#",
-        twitter: "#",
-      },
-    };
+    const { pathname, hostname } = new URL(url);
+    if (hostname.includes("github.com") || hostname.includes("bsky.app")) {
+      return pathname.replace(/^\//, "").replace(/\/$/, "") || "add handle";
+    }
+    return hostname.replace(/^www\./, "");
+  } catch {
+    return "add link";
   }
 }
 
 export default async function Home() {
-  const { featured: featuredProjects } = await getHomePageProjects();
-  const siteSettings = await getSiteSettings();
+  const [analysis, tools, experience, site] = await Promise.all([
+    getProjectsByKind("Reporting and analysis"),
+    getProjectsByKind("Tools and infrastructure"),
+    getExperience(),
+    getSiteSettings(),
+  ]);
+
+  const links = Object.entries(CONTACT_LABELS).map(([key, label]) => {
+    const href = site.socialLinks[key as keyof typeof site.socialLinks];
+    return {
+      key,
+      label,
+      handle: href ? displayHandle(href) : "add link",
+      href: href || "#",
+    };
+  });
 
   return (
-    <div className="min-h-screen pt-16">
-      <KonamiCode />
-      <main className="container mx-auto px-4 py-16">
-        <section className="text-center mb-16 animate-text-reveal">
-          <div className="flex flex-col items-center mb-8">
-            <div className="relative w-32 h-32 mb-6 overflow-hidden rounded-full border-2 border-terminal-selection/50 bg-terminal-selection/30">
-              <Image
-                src="/media/headshot.webp"
-                alt="Chris Hacker"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 128px, 128px"
-                priority
-              />
-            </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 font-mono flex flex-wrap justify-center gap-2 min-h-[3.5rem] md:min-h-[4rem] lg:min-h-[4.5rem] items-center max-w-[90vw] mx-auto">
-              <span className="text-terminal-cyan whitespace-nowrap">
-                {siteSettings.author}
-              </span>
-              <span className="text-terminal-text whitespace-nowrap">
-                &nbsp;|&nbsp;
-              </span>
-              <span className="text-terminal-text">
-                {siteSettings.description}
-              </span>
-            </h1>
-          </div>
-          <p className="text-xl text-terminal-text/80 max-w-3xl mx-auto leading-relaxed">
-            I build tools and analyze data to uncover stories that matter.
-            Specializing in investigative data journalism and custom software
-            development for complex reporting challenges.
-          </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Link
-              href="/projects"
-              className="px-6 py-3 bg-terminal-purple/20 text-terminal-purple border border-terminal-purple rounded-lg hover:bg-terminal-purple hover:text-terminal-text transition-all duration-300 font-mono"
-            >
-              View Projects
-            </Link>
-            <Link
-              href="/about"
-              className="px-6 py-3 bg-terminal-cyan/20 text-terminal-cyan border border-terminal-cyan rounded-lg hover:bg-terminal-cyan hover:text-terminal transition-all duration-300 font-mono"
-            >
-              About Me
-            </Link>
-          </div>
-        </section>
+    <div className="max-w-[660px] mx-auto px-[28px] pt-[96px] pb-[160px] flex flex-col gap-[88px]">
+      <header className="flex flex-col gap-[28px]">
+        <h1 className="m-0 text-[16px] font-medium">{site.author}</h1>
+        <p className="m-0 max-w-[50ch] [text-wrap:pretty]">{site.bio}</p>
+      </header>
 
-        <section className="mb-16">
-          <h2 className="text-2xl font-mono font-bold mb-8 flex items-center">
-            <span className="text-terminal-green">➜</span>
-            <span className="text-terminal-purple ml-2">featured projects</span>
-            <span className="text-terminal-text terminal-text ml-2"></span>
-          </h2>
-          <div className="flex flex-col space-y-8">
-            {featuredProjects.map((project) => (
-              <ProjectCard key={project.title} project={project} />
-            ))}
-          </div>
-          <div className="text-center mt-12">
-            <Link
-              href="/projects"
-              className="inline-flex items-center px-6 py-3 bg-terminal-selection/30 text-terminal-text border border-terminal-selection rounded-lg hover:bg-terminal-selection transition-all duration-300 font-mono"
+      <section className="flex flex-col gap-[20px]">
+        <h2 className="m-0 text-[13px] font-normal tracking-[0.08em] uppercase opacity-[0.55]">
+          Reporting and analysis
+        </h2>
+        <ShowMoreList items={analysis} />
+      </section>
+
+      <section className="flex flex-col gap-[20px]">
+        <h2 className="m-0 text-[13px] font-normal tracking-[0.08em] uppercase opacity-[0.55]">
+          Tools and infrastructure
+        </h2>
+        <ShowMoreList items={tools} />
+      </section>
+
+      <section className="flex flex-col gap-[20px]">
+        <h2 className="m-0 text-[13px] font-normal tracking-[0.08em] uppercase opacity-[0.55]">
+          Experience
+        </h2>
+        <div className="flex flex-col">
+          {experience.map((job) => (
+            <div key={job.title} className="row flex flex-col gap-[14px]">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-[24px] gap-y-2 items-baseline">
+                <span className="flex flex-col gap-1 min-w-0">
+                  <span className="font-medium">{job.title}</span>
+                  <span className="opacity-[0.55] [text-wrap:pretty]">
+                    {job.org}
+                  </span>
+                </span>
+                <span className="text-[13px] opacity-[0.55] text-right [font-variant-numeric:tabular-nums]">
+                  {job.dates}
+                </span>
+              </div>
+              {job.roles.length > 0 && (
+                <div className="flex flex-col gap-[10px] pl-[24px]">
+                  {job.roles.map((role) => (
+                    <div
+                      key={role.title}
+                      className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-[24px] gap-y-2 items-baseline"
+                    >
+                      <span className="min-w-0 text-[14px] opacity-[0.8]">
+                        {role.title}
+                      </span>
+                      <span className="text-[12px] opacity-[0.55] text-right [font-variant-numeric:tabular-nums]">
+                        {role.dates}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-[20px]">
+        <h2 className="m-0 text-[13px] font-normal tracking-[0.08em] uppercase opacity-[0.55]">
+          Contact
+        </h2>
+        <div className="flex flex-col">
+          {links.map((link) => (
+            <a
+              key={link.key}
+              href={link.href}
+              target={link.href !== "#" ? "_blank" : undefined}
+              rel={link.href !== "#" ? "noopener noreferrer" : undefined}
+              className="row row-sm grid grid-cols-[minmax(0,1fr)_auto] gap-x-[24px] items-baseline"
             >
-              ➜ explore all projects
-            </Link>
-          </div>
-        </section>
-      </main>
+              <span>{link.label}</span>
+              <span className="text-[13px] opacity-[0.55] whitespace-nowrap">
+                {link.handle}
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <footer className="flex justify-between gap-[24px] text-[13px] opacity-[0.55] border-t border-[color:var(--hairline)] pt-[14px]">
+        <span>{site.location}</span>
+        <span className="[font-variant-numeric:tabular-nums]">
+          {site.updatedLabel}
+        </span>
+      </footer>
     </div>
   );
 }

@@ -1,15 +1,16 @@
 import "./globals.css";
-import "@fontsource/fira-code";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import Navigation from "@/components/Navigation";
+import { Instrument_Sans } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
 
 export const metadata: Metadata = {
-  title: "Chris Hacker | Data Journalist & Engineer",
+  title: "Chris Hacker",
   description:
-    "Investigative data reporter and engineer specializing in data analysis and custom tools for complex reporting challenges.",
+    "Data journalist on the data team at The Washington Post, based in Washington, DC.",
 };
 
 export default function RootLayout({
@@ -19,11 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} grid-bg min-h-screen`}>
-        <Navigation />
-        <main className="container mx-auto px-4 py-8 relative z-10 animate-text-reveal">
-          {children}
-        </main>
+      <body
+        className={instrumentSans.className}
+        style={{ fontSize: 16, lineHeight: 1.55 }}
+      >
+        {children}
       </body>
     </html>
   );

@@ -19,7 +19,7 @@ describe("NotFound Page", () => {
     const heading = screen.getByRole("heading", { level: 1 });
     expect(heading).toBeInTheDocument();
     // Check for link accessibility
-    const link = screen.getByRole("link", { name: /return home/i });
+    const link = screen.getByRole("link", { name: /chris hacker/i });
     expect(link).toBeInTheDocument();
   });
 });

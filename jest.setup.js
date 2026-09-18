@@ -10,12 +10,7 @@ jest.mock("next/image", () => ({
 
 // Mock next/font/google
 jest.mock("next/font/google", () => ({
-  Inter: () => ({
-    className: "mock-inter-font",
+  Instrument_Sans: () => ({
+    className: "mock-instrument-sans-font",
   }),
-}));
-
-// Mock next/navigation
-jest.mock("next/navigation", () => ({
-  usePathname: () => "/",
 }));

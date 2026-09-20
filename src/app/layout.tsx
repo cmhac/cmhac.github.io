@@ -10,7 +10,7 @@ const instrumentSans = Instrument_Sans({
 export const metadata: Metadata = {
   title: "Chris Hacker",
   description:
-    "Data journalist on the data team at The Washington Post, based in Washington, DC.",
+    "Computational journalist on the data team at The Washington Post, based in Washington, DC.",
 };
 
 export default function RootLayout({

@@ -1,6 +1,7 @@
 ---
 title: Trump keeps targeting late-night TV. The hosts keep pushing back.
-description: I used machine learning to analyze more than 400 hours of late-night
+description:
+  I used machine learning to analyze more than 400 hours of late-night
   comedy clips, showing the share of jokes aimed at Trump kept climbing despite
   FCC threats and his repeated calls to get the hosts fired.
 technologies:

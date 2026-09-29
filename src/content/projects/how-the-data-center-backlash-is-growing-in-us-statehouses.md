@@ -1,6 +1,7 @@
 ---
 title: How the data center backlash is growing in U.S. statehouses
-description: I built an analysis of state legislative records that found at least
+description:
+  I built an analysis of state legislative records that found at least
   375 data center bills introduced in 2026, roughly three-quarters of them
   seeking to restrict development.
 technologies:

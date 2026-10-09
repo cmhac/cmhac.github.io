@@ -17,7 +17,7 @@ date: 2026-10-09
 kind: Tools and infrastructure
 ---
 
-I built the graphics rig that CBS News used to publish interactive stories. The data team had big stories it wanted to highlight and the frontend skills to build them, but no means of actually getting an interactive onto the site. I built a simple solution that fit into existing git workflows and enabled the team to publish dozens of ambitious stories.
+I built the graphics rig that CBS News used to publish interactive stories. The data team had big stories it wanted to highlight and graphics reporters with the frontend skills to build them, but no means of quickly getting an interactive onto the site without requiring significant custom deployment work from the engineering team. I built a simple solution that fit into existing git workflows and enabled the team to publish dozens of ambitious stories on their own.
 
 The "rig" is simple: a GitHub Actions pipeline that runs on a single graphics monorepo. A journalist develops a new interactive in the monorepo, and the pipeline takes care of building and deploying it. Users can deploy internal-only previews off of git branches before merging, allowing iterative development that can be shared with non-technical staff for review. I also wrote a Svelte component library to use in projects published on the rig, so components don't need to be rebuilt from scratch each time, and site-wide design changes can be easily applied to previously-published stories.
 

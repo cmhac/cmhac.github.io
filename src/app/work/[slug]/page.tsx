@@ -91,7 +91,9 @@ export default async function ProjectPage({ params }: Props) {
         </div>
       )}
 
-      <div className="flex flex-col gap-[20px] max-w-[50ch] [&>p]:m-0 [&_p]:[text-wrap:pretty]">
+      {/* Tailwind's preflight strips list markers and globals.css strips link
+          underlines, so body lists and links need their styling restored here. */}
+      <div className="flex flex-col gap-[20px] max-w-[50ch] [&>p]:m-0 [&_p]:[text-wrap:pretty] [&_ul]:m-0 [&_ul]:pl-[20px] [&_ul]:list-disc [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-[10px] [&_li]:[text-wrap:pretty] [&_a]:underline [&_a]:underline-offset-[3px]">
         <ReactMarkdown
           components={{
             p: ({ children }) => <p>{children}</p>,

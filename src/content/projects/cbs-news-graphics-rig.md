@@ -10,7 +10,7 @@ technologies:
   JavaScript: "Core language for the component library and build tooling"
   Monorepo: "Single repository holding every graphics project"
 url: ""
-image: ""
+image: /media/cbs-news-graphics-rig-collage.jpg
 featured: false
 featureRank: null
 date: 2026-10-09

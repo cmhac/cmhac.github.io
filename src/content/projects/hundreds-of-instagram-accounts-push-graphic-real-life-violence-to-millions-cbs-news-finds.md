@@ -5,6 +5,7 @@ technologies:
   Web scraping: "Automated collection of Instagram Reels at scale"
   OSINT: "Open-source intelligence methods used to investigate the accounts"
 url: https://www.cbsnews.com/news/instagram-violence/
+image: /media/instagram-graphic-violence.webp
 featured: false
 featureRank: null
 date: 2025-10-21

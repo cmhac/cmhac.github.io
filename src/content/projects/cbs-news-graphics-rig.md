@@ -13,12 +13,12 @@ url: ""
 image: ""
 featured: false
 featureRank: null
-date: 2025-01-01
+date: 2026-10-09
 kind: Tools and infrastructure
 ---
 
-I built the graphics rig that CBS News used to publish interactive stories. The data team had big stories it wanted to highlight and the frontend skills to build them, but no means of actually getting an interactive onto the site — so ambitious ideas either shipped as flat images or didn't ship at all.
+I built the graphics rig that CBS News used to publish interactive stories. The data team had big stories it wanted to highlight and the frontend skills to build them, but no means of actually getting an interactive onto the site. I built a simple solution that fit into existing git workflows and enabled the team to publish dozens of ambitious stories.
 
-The rig pairs a large graphics monorepo with an automated CI pipeline built on GitHub Actions. A journalist develops a new interactive inside the monorepo, and the pipeline takes care of building and deploying it, which turns publishing a feature into part of the normal git workflow rather than a separate engineering project. I also wrote the team a Svelte component library to use in those interactives, so the pieces every story needs didn't have to be rebuilt from scratch each time.
+The "rig" is simple: a GitHub Actions pipeline that runs on a single graphics monorepo. A journalist develops a new interactive in the monorepo, and the pipeline takes care of building and deploying it. Users can deploy internal-only previews off of git branches before merging, allowing iterative development that can be shared with non-technical staff for review. I also wrote a Svelte component library to use in projects published on the rig, so components don't need to be rebuilt from scratch each time, and site-wide design changes can be easily applied to previously-published stories. 
 
-Every story published to `cbsnews.com/projects` went out through this rig.
+Every story published to `cbsnews.com/projects` was created with this rig; here are a few recent examples:

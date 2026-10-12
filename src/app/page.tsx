@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getProjectsByKind } from "@/utils/projects";
 import { getExperience } from "@/utils/experience";
 import { getSiteSettings } from "@/utils/site";
@@ -46,6 +47,14 @@ export default async function Home() {
     <div className="max-w-[660px] mx-auto px-[28px] pt-[96px] pb-[160px] flex flex-col gap-[88px]">
       <KonamiCode />
       <header className="flex flex-col gap-[28px]">
+        <Image
+          src="/media/headshot.webp"
+          alt={`Headshot of ${site.author}`}
+          width={200}
+          height={200}
+          priority
+          className="object-cover w-[150px] h-[150px] sm:w-[200px] sm:h-[200px]"
+        />
         <h1 className="m-0 text-[16px] font-medium">{site.author}</h1>
         <p className="m-0 max-w-[50ch] [text-wrap:pretty]">{site.bio}</p>
       </header>

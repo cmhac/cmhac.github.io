@@ -53,7 +53,7 @@ export default async function Home() {
           width={96}
           height={96}
           priority
-          className="rounded-full object-cover"
+          className="object-cover"
         />
         <h1 className="m-0 text-[16px] font-medium">{site.author}</h1>
         <p className="m-0 max-w-[50ch] [text-wrap:pretty]">{site.bio}</p>

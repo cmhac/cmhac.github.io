@@ -12,4 +12,6 @@ date: 2025-10-21
 kind: Reporting and analysis
 ---
 
+In February 2025, a [glitch](https://www.cbsnews.com/news/why-is-instagram-meta-showing-sensitive-content/?linkId=760806785) accidentally exposed unwitting Instagram Reels users to graphic videos depicting real-world violence, injury and death. I was one of them, and wanted to understand what this content was, who was posting it and why. I built a web scraper to scroll Instagram Reels and map the network of so-called accounts, and quantify the scale of their reach.
+
 With the help of our OSINT team, we investigated the accounts. We interviewed the people behind these so-called "gore" accounts, who told us they post the often shockingly violent videos to grow and monetize their accounts via informal, off-platform advertising deals made in Telegram channels.

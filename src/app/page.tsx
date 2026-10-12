@@ -50,10 +50,10 @@ export default async function Home() {
         <Image
           src="/media/headshot.webp"
           alt={`Headshot of ${site.author}`}
-          width={96}
-          height={96}
+          width={200}
+          height={200}
           priority
-          className="object-cover"
+          className="object-cover w-[150px] h-[150px] sm:w-[200px] sm:h-[200px]"
         />
         <h1 className="m-0 text-[16px] font-medium">{site.author}</h1>
         <p className="m-0 max-w-[50ch] [text-wrap:pretty]">{site.bio}</p>

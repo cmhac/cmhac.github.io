@@ -64,6 +64,16 @@ describe("Home Page", () => {
     expect(screen.getByText(mockSiteSettings.bio)).toBeInTheDocument();
   });
 
+  it("renders the headshot above the name", async () => {
+    render(await Home());
+
+    const img = screen.getByAltText("Headshot of Chris Hacker");
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(
+      img.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
   it("shows only 5 reporting and analysis items with a show more button", async () => {
     render(await Home());
 

@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   title: "Chris Hacker",
   description:
     "Computational journalist on the data team at The Washington Post, based in Washington, DC.",
+  // Browsers cache favicons aggressively; bump ?v= whenever favicon.ico changes.
+  icons: {
+    icon: [{ url: "/favicon.ico?v=2", sizes: "any" }],
+    shortcut: "/favicon.ico?v=2",
+  },
 };
 
 export default function RootLayout({
